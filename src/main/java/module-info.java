@@ -1,0 +1,13 @@
+module es.cifpcarlos3.proyecto {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires com.calendarfx.view;
+    requires static lombok;
+    requires java.sql;
+
+
+    opens es.cifpcarlos3.proyecto to javafx.fxml;
+    exports es.cifpcarlos3.proyecto;
+    exports es.cifpcarlos3.proyecto.Controladores;
+    opens es.cifpcarlos3.proyecto.Controladores to javafx.fxml;
+}

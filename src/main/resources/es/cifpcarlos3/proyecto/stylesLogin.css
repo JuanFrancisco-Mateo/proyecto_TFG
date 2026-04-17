@@ -1,0 +1,43 @@
+.root{
+    -fx-background-color: linear-gradient(to bottom right,
+    #094C79,
+    #00D0FF,
+    #E8F9FC
+    )
+   }
+.vbox {
+    -fx-background-color: rgba(15, 23, 42, 0.85);
+    -fx-alignment: center;
+    -fx-spacing: 20;
+}
+#labelNombre {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+#labelBienvenido {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+    -fx-padding: 0 0 20 0;
+}
+.label {
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+}
+.text-field, .password-field {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #cbd5e1;
+    -fx-padding: 8;
+    -fx-font-size: 13px;
+}
+#btnAcceder {
+    -fx-background-color: #0284c7;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 25;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}

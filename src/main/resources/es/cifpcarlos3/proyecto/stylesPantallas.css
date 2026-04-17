@@ -1,0 +1,51 @@
+.root{
+    -fx-background-color:#00D0FF;
+}
+
+#menuSuperior {
+    -fx-background-color: lightblue;
+    -fx-padding: 12 20;
+    -fx-border-style: solid;
+}
+#menuSuperior Label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0f172a;
+}
+
+#menuLateral {
+    -fx-background-color: lightblue;
+    -fx-padding: 20 15;
+    -fx-spacing: 20;
+    -fx-pref-width: 180;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 1 0 0;
+    -fx-border-style: solid;
+}
+#menuLateral Label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #0f172a;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
+}
+
+#contenido{
+    -fx-background-color:#f1f5f9;
+}
+#menuUsuario {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+#btnAdministracion{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+.calendar-view{
+    -fx-background-color: green;
+}
