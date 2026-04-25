@@ -3,6 +3,7 @@ package es.cifpcarlos3.proyecto.Controladores;
 import es.cifpcarlos3.proyecto.HelloApplication;
 import es.cifpcarlos3.proyecto.dao.UsuarioDAO;
 import es.cifpcarlos3.proyecto.dao.impl.UsuarioDAOImpl;
+import es.cifpcarlos3.proyecto.model.Rol;
 import es.cifpcarlos3.proyecto.model.Sesion;
 import es.cifpcarlos3.proyecto.model.Usuario;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
@@ -41,8 +42,10 @@ public class LoginControlador {
     @FXML
     public void acceder(ActionEvent actionEvent) {
         String user = tfUserName.getText();
-      //  Usuario usuario=usuarioDAO.devolverUser(user);
+        String pass = tfPassword.getText();
         /*
+        Usuario usuario=usuarioDAO.devolverUser(user);
+
         //hacemos la comprobacion
         if(usuario==null){//si el no encuentra ningun usuario con ese username devuelve un mensaje de error
 
@@ -73,6 +76,14 @@ public class LoginControlador {
         }
 
          */
+        Usuario usuarioFalso = new Usuario();
+        usuarioFalso.setNombre("Irene");
+        usuarioFalso.setEmail("email@prueba.com");
+        usuarioFalso.setTelefono("123456789");
+        usuarioFalso.setRol(Rol.ADMINISTRADOR);
+        usuarioFalso.setPasswordHash("prueba");
+
+        Sesion.inicioSession(usuarioFalso);
             Stage ventanaLogin = (Stage) labelNombre.getScene().getWindow();
             ventanaInicio(ventanaLogin);
 
