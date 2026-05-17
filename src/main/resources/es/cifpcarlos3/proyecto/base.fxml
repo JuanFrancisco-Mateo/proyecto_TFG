@@ -51,12 +51,12 @@
             </padding>
 
             <Label fx:id="btnInicio" text="Inicio" onMouseClicked="#irInicio"/>
-            <Label fx:id="btnReservas" text="Reservas" onMouseClicked="#irReservas"/>
+            <Label fx:id="btnReservas" text="Nueva reserva" onMouseClicked="#irReservas"/>
             <Label fx:id="btnClientes" text="Clientes" onMouseClicked="#irClientes"/>
             <MenuButton fx:id="btnAdministracion" text="Administración">
                 <items>
-                    <MenuItem text="Crear Usuario" onAction="#crearUsuario"/>
-                    <MenuItem text="Crear Instructor" onAction="#crearInstructor"/>
+                    <MenuItem text="Usuarios" onAction="#irUsuarios"/>
+                    <MenuItem text="Instructores" onAction="#irInstructores"/>
                 </items>
             </MenuButton>
         </VBox>
