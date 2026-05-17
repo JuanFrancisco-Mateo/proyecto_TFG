@@ -1,4 +1,4 @@
 package es.cifpcarlos3.proyecto.Controladores;
 
-public class ClientesControlador {
+public class CrearClienteControlador {
 }

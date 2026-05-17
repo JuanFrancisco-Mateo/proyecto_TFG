@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Text?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="es.cifpcarlos3.proyecto.Controladores.UsuariosControlador"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <TableView layoutX="91.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+            </columns>
+        </TableView>
+        <Text layoutX="23.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USUARIOS" />
+        <Line endX="188.66665649414062" endY="-5.7220458984375E-6" layoutX="182.0" layoutY="30.0" startX="-100.0" />
+    </children>
+</AnchorPane>
