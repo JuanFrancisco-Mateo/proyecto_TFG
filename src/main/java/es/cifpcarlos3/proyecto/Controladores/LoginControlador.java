@@ -14,6 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -34,6 +36,7 @@ public class LoginControlador {
     private TextField tfUserName;
 
 
+    private static final Logger log = LogManager.getLogger(LoginControlador.class);
     /*
        DatabaseConnection db = new DatabaseConnection();
        private UsuarioDAO usuarioDAO = new UsuarioDAOImpl(db);
@@ -43,6 +46,7 @@ public class LoginControlador {
     public void acceder(ActionEvent actionEvent) {
         String user = tfUserName.getText();
         String pass = tfPassword.getText();
+        log.info("Intento de acceso a la aplicacion con el usuario "+user);
         /*
         Usuario usuario=usuarioDAO.devolverUser(user);
 
@@ -54,10 +58,11 @@ public class LoginControlador {
             alerta.setHeaderText("ERROR");
             alerta.setContentText("Usuario no encontrado");
             alerta.showAndWait();
-
+            log.warn("No se ha encontrado ese nombre de usuario en la base de datos");
         }else{ //Si lo encuentra hashea la contraseña y la comprueba con la guardada en la base de datos
-            if(usuario.getPasswordHash()==Base64.getEncoder().encodeToString(tfPassword.getText().getBytes())){
+            if(PasswordUtil.verificarPassword(password, usuario.getPasswordHash())){
                 //Si coincide la contraseña del usuario con la introducida
+                log.info("Usuario y contraseña correctos, se crea una nueva sesion");
                 //Creamos una sesion con el usuario para poder tenerlo en las diferentes ventanas
                 Sesion.inicioSession(usuario);
                 //cambiamos de ventana
@@ -67,6 +72,7 @@ public class LoginControlador {
 
             }else{
                 //Si no coincide devolvemos un mensaje de error
+                log.warn("Usuario y/o contraseña incorrectos");
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setTitle("Error en la contraseña");
                 alerta.setHeaderText("ERROR");
@@ -76,16 +82,28 @@ public class LoginControlador {
         }
 
          */
-        Usuario usuarioFalso = new Usuario();
-        usuarioFalso.setNombre("Irene");
-        usuarioFalso.setEmail("email@prueba.com");
-        usuarioFalso.setTelefono("123456789");
-        usuarioFalso.setRol(Rol.ADMINISTRADOR);
-        usuarioFalso.setPasswordHash("prueba");
+        if ("email@prueba.com".equals(user) && "prueba".equals(pass)) {
 
-        Sesion.inicioSession(usuarioFalso);
+            Usuario usuarioFalso = new Usuario();
+            usuarioFalso.setNombre("Irene");
+            usuarioFalso.setEmail("email@prueba.com");
+            usuarioFalso.setTelefono("123456789");
+            usuarioFalso.setRol(Rol.ADMINISTRADOR);
+            usuarioFalso.setPasswordHash("prueba");
+
+            Sesion.inicioSession(usuarioFalso);
+
             Stage ventanaLogin = (Stage) labelNombre.getScene().getWindow();
             ventanaInicio(ventanaLogin);
+
+        } else{
+
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error login");
+            alerta.setHeaderText("ERROR");
+            alerta.setContentText("Usuario o contraseña incorrectos");
+            alerta.showAndWait();
+        }
 
 
     }
@@ -97,14 +115,15 @@ public class LoginControlador {
             Scene scene = new Scene(root, 400, 500);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
-            stage.setTitle("INICIO");
+            stage.setTitle("DIVE CENTER");
             stage.setScene(scene);
             stage.setMaximized(true);
             stage.setResizable(false);
             stage.show();
-
+            log.info("Se carga la ventana principal de la aplicacion");
 
         } catch (IOException e) {
+            log.warn("No se ha podido cargar la ventana de inicio");
             System.err.println("ERROR. Fallo al cargar la nueva vista");
         }
         ventana.close();

@@ -40,7 +40,7 @@
         </rowConstraints>
          <children>
             <Label fx:id="labelBienvenido" text="BIENVENIDO" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
-            <Label fx:id="labelUser" alignment="CENTER" text="USUARIO: " GridPane.rowIndex="1" />
+            <Label fx:id="labelUser" alignment="CENTER" text="EMAIL: " GridPane.rowIndex="1" />
             <Label text="CONTRASEÑA: " GridPane.rowIndex="2" />
             <TextField fx:id="tfUserName" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>

@@ -41,3 +41,6 @@
     -fx-background-radius: 8;
     -fx-cursor: hand;
 }
+.text{
+    -fx-font-weight:bold;
+}
