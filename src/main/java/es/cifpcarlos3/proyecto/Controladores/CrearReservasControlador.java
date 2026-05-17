@@ -2,9 +2,6 @@ package es.cifpcarlos3.proyecto.Controladores;
 
 import es.cifpcarlos3.proyecto.HelloApplication;
 import es.cifpcarlos3.proyecto.dao.*;
-import es.cifpcarlos3.proyecto.dao.impl.BarcoDAOImpl;
-import es.cifpcarlos3.proyecto.dao.impl.InstructorDAOImpl;
-import es.cifpcarlos3.proyecto.dao.impl.UsuarioDAOImpl;
 import es.cifpcarlos3.proyecto.model.*;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
 import javafx.event.ActionEvent;
@@ -14,13 +11,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 
-public class CrearReservas {
+public class CrearReservasControlador {
     @javafx.fxml.FXML
     private ComboBox<LocalTime> cbHora;
     @javafx.fxml.FXML
@@ -56,7 +54,7 @@ public class CrearReservas {
     private ClienteDAO clienteDAO;
     private ReservaDAO reservaDAO;
     Usuario usuario;
-
+    private static final Logger log = LogManager.getLogger(CrearReservasControlador.class);
     public void initialize(){
 
         /*
@@ -110,6 +108,8 @@ public class CrearReservas {
 
     @FXML
     public void crearReserva(ActionEvent actionEvent) {
+
+        log.info("Creando una reserva nueva");
         Reserva reserva = new Reserva();
 
         reserva.setFecha(dpFecha.getValue());
@@ -121,13 +121,15 @@ public class CrearReservas {
         Inmersion inmersion;
         //si es de barco
         if(cbTipo.getValue().equals("BARCO")){
-            InmersionBarco inmersionBarco = new InmersionBarco();
-            inmersionBarco.setBarco(cbBarco.getValue());
-            inmersionBarco.setPrecio(Double.parseDouble(tfPrecio.getText()));
-            inmersionBarco.setPlazasMax(Integer.parseInt(tfPlazas.getText()));
-            inmersionBarco.setNombre(cbEspecialidad.getValue().toString());
-            inmersion = inmersionBarco;
+                log.info("La reserva es de tipo barco");
+                InmersionBarco inmersionBarco = new InmersionBarco();
+                inmersionBarco.setBarco(cbBarco.getValue());
+                inmersionBarco.setPrecio(Double.parseDouble(tfPrecio.getText()));
+                inmersionBarco.setPlazasMax(Integer.parseInt(tfPlazas.getText()));
+                inmersionBarco.setNombre(cbEspecialidad.getValue().toString());
+                inmersion = inmersionBarco;
         }else{ //si es de costa
+            log.info("La reserva es de tipo costa");
             InmersionCosta inmersionCosta = new InmersionCosta();
             inmersionCosta.setPrecio(Double.parseDouble(tfPrecio.getText()));
             inmersionCosta.setPlazasMax(Integer.parseInt(tfPlazas.getText()));
@@ -137,6 +139,7 @@ public class CrearReservas {
         }
         reserva.setInmersion(inmersion);
         //reservaDAO.crearReserva(reserva);
+        log.info("Reserva creada");
 
     }
 
@@ -170,7 +173,7 @@ public class CrearReservas {
     //cada vez que se cambia el tipo de reserva se llama a este metodo
     public void cambioTipo(){
         String tipo = cbTipo.getValue();
-
+        log.info("Se ha cambiado el tipo de reserva al crearla");
         if(tipo.equals("BARCO")){
             cbBarco.setDisable(false);
             txtLugar.setDisable(true);
@@ -212,6 +215,7 @@ public class CrearReservas {
             stage.show();
         } catch (IOException e) {
             System.err.println("ERROR. Fallo al cargar la vista crear cliente");
+            log.warn("Error al cargar la vista para crear un nuevo cliente desde crear reservas");
         }
     }
 }
