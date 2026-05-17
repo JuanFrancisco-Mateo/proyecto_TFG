@@ -4,7 +4,7 @@ public enum Certificacion {
     //Puestos por orden
     //Recreativo
     SCUBA,
-    OWD, //open water driver
+    OWD , //open water driver
     AOWD, //Advanced open water driver
     RESCUE,
     MASTERSCUBA,

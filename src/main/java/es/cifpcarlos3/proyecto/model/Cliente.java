@@ -16,6 +16,7 @@ public class Cliente extends Persona{
     private List<Especialidad> especialidades;
     private String numeroSeguro;
     private LocalDate seguroHasta;
+    private LocalDate fechaExp;
 
     public void addEspecialidad(Especialidad especialidad){}
     public void removeEspecialidad(Especialidad especialidad){}

@@ -6,6 +6,7 @@ import es.cifpcarlos3.proyecto.model.Usuario;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class UsuarioDAOImpl implements UsuarioDAO {
     private final DatabaseConnection db;
@@ -27,13 +28,15 @@ public class UsuarioDAOImpl implements UsuarioDAO {
                 } else {
                     //habra que comprobar luego los nombres de los campos en las tablas
                     String nombre = rdo.getString("nombre");
+                    String apellidos = rdo.getString("apellidos");
                     Rol rol = Rol.valueOf(rdo.getString("rol"));
                     int id = rdo.getInt("idUsuario");
                     String email = rdo.getString("email");
                     String tlf = rdo.getString("telefono");
-                    String username = rdo.getString("username");
+                    LocalDate fechaNac = rdo.getDate("fechaNacimiento").toLocalDate();
                     String password = rdo.getString("passwordHash");
-                    Usuario usuario = new Usuario(id, nombre, email, tlf, username, password, rol);
+                    String dni = rdo.getString("dni");
+                    Usuario usuario = new Usuario(id, nombre, apellidos, email, dni, tlf, fechaNac, password, rol);
                     return usuario;
                 }
             }

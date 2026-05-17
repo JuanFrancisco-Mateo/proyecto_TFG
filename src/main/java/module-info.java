@@ -4,6 +4,8 @@ module es.cifpcarlos3.proyecto {
     requires com.calendarfx.view;
     requires static lombok;
     requires java.sql;
+    requires jbcrypt;
+    requires org.apache.logging.log4j;
 
 
     opens es.cifpcarlos3.proyecto to javafx.fxml;

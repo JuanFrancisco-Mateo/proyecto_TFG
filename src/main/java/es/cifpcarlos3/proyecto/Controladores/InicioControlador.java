@@ -18,8 +18,6 @@ public class InicioControlador {
 
     public void initialize(){
         calendario.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
-
-
     }
 
 
