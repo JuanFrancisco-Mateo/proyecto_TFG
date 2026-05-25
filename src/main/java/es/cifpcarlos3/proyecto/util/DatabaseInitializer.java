@@ -18,10 +18,6 @@ public class DatabaseInitializer {
     public void initialize() {
         try (Connection conn = db.getConnection();
              Statement stmt = conn.createStatement()) {
-            // Primero crear la BD si no existe (ejecutamos con CREATE DATABASE aparte)
-            String createDbSQL = "CREATE DATABASE IF NOT EXISTS centro_buceo";
-            stmt.execute(createDbSQL);
-            stmt.execute("USE centro_buceo");
 
             // Leer el script SQL desde resources con UTF-8
             InputStream is = getClass().getClassLoader().getResourceAsStream("init.sql");
@@ -34,12 +30,9 @@ public class DatabaseInitializer {
             StringBuilder sqlScript = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                // Saltar líneas de CREATE DATABASE y USE (ya las ejecutamos arriba)
-                if (line.trim().startsWith("CREATE DATABASE") || line.trim().startsWith("USE ")) {
-                    continue;
-                }
-                // Saltar comentarios de una línea
-                if (line.trim().startsWith("--")) {
+                // Saltar líneas de CREATE DATABASE, USE y comentarios
+                String trimmed = line.trim();
+                if (trimmed.startsWith("CREATE DATABASE") || trimmed.startsWith("USE ") || trimmed.startsWith("--")) {
                     continue;
                 }
                 sqlScript.append(line).append("\n");
