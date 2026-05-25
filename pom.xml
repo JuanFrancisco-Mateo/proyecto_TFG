@@ -49,6 +49,13 @@
       <version>1.18.42</version>
     </dependency>
 
+    <!-- Driver MariaDB -->
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>3.3.2</version>
+    </dependency>
+
   </dependencies>
 
   <build>
