@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public abstract class Inmersion {
     protected int idInmersion;
     protected String nombre;
+    protected String tipo;
     protected Certificacion certificacionMinima;
     protected int plazasMax;
     protected double precio;
