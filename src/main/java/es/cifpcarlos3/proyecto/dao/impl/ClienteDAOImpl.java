@@ -20,6 +20,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 
     private Cliente mapearCliente(ResultSet rdo) throws SQLException {
         Cliente cliente = new Cliente();
+        cliente.setIdCliente(rdo.getInt("idCliente"));
         cliente.setNombre(rdo.getString("nombre"));
         cliente.setApellidos(rdo.getString("apellidos"));
         cliente.setDni(rdo.getString("dni"));
@@ -39,31 +40,18 @@ public class ClienteDAOImpl implements ClienteDAO {
         if (seguroHasta != null) {
             cliente.setSeguroHasta(seguroHasta.toLocalDate());
         }
-        // El campo idCliente se obtiene del ResultSet pero no se mapea porque
-        // Cliente extiende Persona y no tiene campo idCliente propio visible
-        // Lo cargamos con un setter si existiera, pero usamos un approach alternativo:
-        // Asignamos via setId si usamos reflection, mejor crear un método interno
-        return cliente;
-    }
-
-    // Método auxiliar para mapear con ID
-    private Cliente mapearClienteConId(ResultSet rdo) throws SQLException {
-        Cliente cliente = mapearCliente(rdo);
-        // Leemos el ID aunque no tenga setter público - usamos enfoque con constructor
         return cliente;
     }
 
     @Override
     public List<Cliente> listarClientes() {
         List<Cliente> lista = new ArrayList<>();
-        String consulta = "SELECT c.*, ce.idEspecialidad FROM clientes c LEFT JOIN cliente_especialidad ce ON c.idCliente = ce.idCliente ORDER BY c.idCliente";
+        String consulta = "SELECT * FROM clientes ORDER BY idCliente";
         try (Connection conn = db.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rdo = stmt.executeQuery(consulta)) {
             while (rdo.next()) {
-                Cliente cliente = mapearCliente(rdo);
-                // Cargar especialidades si hiciera falta
-                lista.add(cliente);
+                lista.add(mapearCliente(rdo));
             }
         } catch (SQLException e) {
             System.err.println("Error al listar clientes: " + e.getMessage());
