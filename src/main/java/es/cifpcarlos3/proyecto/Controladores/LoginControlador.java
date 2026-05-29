@@ -33,50 +33,42 @@ public class LoginControlador {
     private TextField tfUserName;
 
 
-    /*
-       DatabaseConnection db = new DatabaseConnection();
-       private UsuarioDAO usuarioDAO = new UsuarioDAOImpl(db);
+    private DatabaseConnection db = new DatabaseConnection();
+    private UsuarioDAO usuarioDAO = new UsuarioDAOImpl(db);
 
-     */
     @FXML
     public void acceder(ActionEvent actionEvent) {
         String user = tfUserName.getText();
-      //  Usuario usuario=usuarioDAO.devolverUser(user);
-        /*
-        //hacemos la comprobacion
-        if(usuario==null){//si el no encuentra ningun usuario con ese username devuelve un mensaje de error
+        String password = tfPassword.getText();
 
+        // Buscar el usuario en la base de datos
+        Usuario usuario = usuarioDAO.devolverUser(user);
+
+        // Si el usuario no existe
+        if (usuario == null) {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error en el usuario");
             alerta.setHeaderText("ERROR");
             alerta.setContentText("Usuario no encontrado");
             alerta.showAndWait();
-
-        }else{ //Si lo encuentra hashea la contraseña y la comprueba con la guardada en la base de datos
-            if(usuario.getPasswordHash()==Base64.getEncoder().encodeToString(tfPassword.getText().getBytes())){
-                //Si coincide la contraseña del usuario con la introducida
-                //Creamos una sesion con el usuario para poder tenerlo en las diferentes ventanas
-                Sesion.inicioSession(usuario);
-                //cambiamos de ventana
-                Stage ventanaLogin = (Stage) labelNombre.getScene().getWindow();
-                ventanaInicio(ventanaLogin);
-
-
-            }else{
-                //Si no coincide devolvemos un mensaje de error
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Error en la contraseña");
-                alerta.setHeaderText("ERROR");
-                alerta.setContentText("Contraseña incorrecta");
-                alerta.showAndWait();
-            }
+            return;
         }
 
-         */
+        // Comprobar la contraseña
+        String passwordHash = Base64.getEncoder().encodeToString(password.getBytes());
+        if (usuario.getPasswordHash().equals(passwordHash)) {
+            // Login correcto: crear sesión y abrir ventana principal
+            Sesion.inicioSession(usuario);
             Stage ventanaLogin = (Stage) labelNombre.getScene().getWindow();
             ventanaInicio(ventanaLogin);
-
-
+        } else {
+            // Contraseña incorrecta
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error en la contraseña");
+            alerta.setHeaderText("ERROR");
+            alerta.setContentText("Contraseña incorrecta");
+            alerta.showAndWait();
+        }
     }
 
     public void ventanaInicio(Stage ventana){

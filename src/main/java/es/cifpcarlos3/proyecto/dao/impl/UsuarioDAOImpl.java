@@ -44,7 +44,8 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     }
     @Override
     public void crearUsuario(String nombre, String email, String tlf, String userName, String passwordHash, Rol rol){
-        final String consulta = "INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES (?, ?, ?)";
+        // SQL correcta con 6 placeholders
+        final String consulta = "INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES (?, ?, ?, ?, ?, ?)";
         int filas=0;
 
         try(var conexion  = db.getConnection();
@@ -69,14 +70,35 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         }
     }
     @Override
-    public void modifUsuario(int idUsuario, String email, String tlf){}
+    public void modifUsuario(int idUsuario, String email, String tlf){
+        String consulta = "UPDATE usuario SET email = ?, telefono = ? WHERE idUsuario = ?";
+        try (var conexion = db.getConnection();
+             var sentencia = conexion.prepareStatement(consulta)) {
+            sentencia.setString(1, email);
+            sentencia.setString(2, tlf);
+            sentencia.setInt(3, idUsuario);
+            sentencia.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al modificar usuario: " + e.getMessage());
+        }
+    }
 
     @Override
-    public void modifPassword(int idUsuario, String password){}
+    public void modifPassword(int idUsuario, String password){
+        String consulta = "UPDATE usuario SET passwordHash = ? WHERE idUsuario = ?";
+        try (var conexion = db.getConnection();
+             var sentencia = conexion.prepareStatement(consulta)) {
+            sentencia.setString(1, password);
+            sentencia.setInt(2, idUsuario);
+            sentencia.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al modificar password: " + e.getMessage());
+        }
+    }
 
     @Override
     public void eliminarUsuario(String userName){
-        String consulta = "DELETE FROM usuario WHERE t_profesor.username = ?";
+        String consulta = "DELETE FROM usuario WHERE username = ?";
         int filas=0;
 
         try(var conexion  = db.getConnection();
@@ -86,13 +108,13 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             filas=sentencia.executeUpdate();
 
             if(filas!=0){
-                System.out.println("Profesor no se ha podido eliminar");
+                System.out.println("Usuario no se ha podido eliminar");
             }else{
-                System.out.println("Profesor eliminado corrrectamente");
+                System.out.println("Usuario eliminado correctamente");
             }
 
         }catch (SQLException e){
-            System.err.println("Error al eliminar el profesor: " + e.getMessage());
+            System.err.println("Error al eliminar el usuario: " + e.getMessage());
         }
     }
 }
