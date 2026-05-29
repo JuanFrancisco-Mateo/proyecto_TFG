@@ -196,6 +196,16 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
 
     @FXML
     public void crearInstructor(ActionEvent actionEvent) {
+        try {
+            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearInstructor.fxml"));
+            AnchorPane centro = vista.load();
+
+            contenido.getChildren().clear();
+            contenido.getChildren().add(centro);
+
+        }catch(IOException e){
+            System.err.println("Error al cargar la vista de creación de instructores");
+        }
     }
 }
 

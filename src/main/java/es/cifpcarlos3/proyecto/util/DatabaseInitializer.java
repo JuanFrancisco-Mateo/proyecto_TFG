@@ -51,7 +51,6 @@ public class DatabaseInitializer {
                     }
                 }
             }
-            System.out.println("Base de datos inicializada correctamente");
         } catch (Exception e) {
             System.err.println("Error al inicializar BD: " + e.getMessage());
         }

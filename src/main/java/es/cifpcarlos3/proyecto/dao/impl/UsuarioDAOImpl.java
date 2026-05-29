@@ -44,7 +44,6 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public void crearUsuario(String nombre, String email, String tlf, String userName, String passwordHash, Rol rol){
         final String consulta = "INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES (?, ?, ?, ?, ?, ?)";
-        int filas=0;
 
         try(var conexion  = db.getConnection();
             var sentencia = conexion.prepareStatement(consulta) ){
@@ -55,13 +54,8 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             sentencia.setString(4, userName);
             sentencia.setString(5, passwordHash);
             sentencia.setString(6, rol.toString());
-            filas=sentencia.executeUpdate();
+            sentencia.executeUpdate();
 
-            if(filas==0){
-                System.out.println("No se ha podido crear el usuario");
-            }else{
-                System.out.println("Usuario creado corrrectamente");
-            }
         }catch (SQLException e){
             System.err.println("Error al añadir el cliente: " + e.getMessage());
         }
@@ -96,19 +90,12 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public void eliminarUsuario(String userName){
         String consulta = "DELETE FROM usuario WHERE username = ?";
-        int filas=0;
 
         try(var conexion  = db.getConnection();
             var sentencia = conexion.prepareStatement(consulta) ){
 
             sentencia.setString(1, userName);
-            filas=sentencia.executeUpdate();
-
-            if(filas==0){
-                System.out.println("Usuario no se ha podido eliminar");
-            }else{
-                System.out.println("Usuario eliminado correctamente");
-            }
+            sentencia.executeUpdate();
 
         }catch (SQLException e){
             System.err.println("Error al eliminar el usuario: " + e.getMessage());

@@ -197,6 +197,7 @@ public class ReservaDAOImpl implements ReservaDAO {
             try (ResultSet rdo = stmt.executeQuery()) {
                 while (rdo.next()) {
                     Cliente cliente = new Cliente();
+                    cliente.setIdCliente(rdo.getInt("idCliente"));
                     cliente.setNombre(rdo.getString("nombre"));
                     cliente.setApellidos(rdo.getString("apellidos"));
                     cliente.setDni(rdo.getString("dni"));

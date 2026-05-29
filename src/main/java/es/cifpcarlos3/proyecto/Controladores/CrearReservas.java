@@ -42,6 +42,7 @@ public class CrearReservas {
     private InmersionesDAO inmersionesDAO;
     private InstructorDAO instructorDAO;
     private ClienteDAO clienteDAO;
+    private BarcoDAO barcoDAO;
     private List<Cliente> clientesSeleccionados;
     private Inmersion inmersionSeleccionada;
 
@@ -51,6 +52,7 @@ public class CrearReservas {
         inmersionesDAO = new InmersionesDAOImpl(db);
         instructorDAO = new InstructorDAOImpl(db);
         clienteDAO = new ClienteDAOImpl(db);
+        barcoDAO = new BarcoDAOImpl(db);
         clientesSeleccionados = new ArrayList<>();
 
         // Cargar tipos de inmersión
@@ -100,8 +102,6 @@ public class CrearReservas {
 
             // Barco disponible (solo si es tipo BARCO)
             if ("BARCO".equals(cbTipo.getValue())) {
-                // Usamos BarcoDAO
-                BarcoDAO barcoDAO = new BarcoDAOImpl(new DatabaseConnection());
                 Barco barco = barcoDAO.devolverBarcoDisponible(fecha, hora);
                 if (barco != null) {
                     cbBarco.getItems().clear();
@@ -165,7 +165,7 @@ public class CrearReservas {
 
     @FXML
     public void crearReserva(ActionEvent actionEvent) {
-        // Validar campos
+        // comprobar que todos los campos estan rellenos
         if (cbTipo.getValue() == null || dpFecha.getValue() == null || cbHora.getValue() == null) {
             mostrarError("Campos incompletos", "Debe seleccionar tipo, fecha y hora");
             return;
@@ -185,20 +185,19 @@ public class CrearReservas {
             return;
         }
 
-        // Validar instructor
+        // comprobar que hay instructor seleccionado y que esta libre
         Instructor instructor = cbInstructor.getValue();
         if (instructor == null) {
             mostrarError("Instructor requerido", "Debe seleccionar un instructor disponible");
             return;
         }
 
-        // Validar disponibilidad del instructor
         if (!reservaDAO.isDisponible(fecha, hora, instructor.getIdInstructor())) {
             mostrarError("Instructor no disponible", "El instructor ya tiene una reserva en esa fecha/hora");
             return;
         }
 
-        // Validar número de clientes vs plazas máximas
+        // comprobar que hay clientes y no se pasa del maximo
         if (clientesSeleccionados.isEmpty()) {
             mostrarError("Sin clientes", "Debe añadir al menos un cliente a la reserva");
             return;
@@ -210,7 +209,7 @@ public class CrearReservas {
             return;
         }
 
-        // Crear la reserva
+        // guardar la reserva en la base de datos
         Reserva reserva = new Reserva();
         reserva.setInmersion(inmersionSeleccionada);
         reserva.setFecha(fecha);

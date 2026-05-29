@@ -135,8 +135,7 @@ public class ClienteDAOImpl implements ClienteDAO {
 
     @Override
     public void modifCliente(Cliente cliente) {
-        // Nota: no tenemos idCliente accesible, usamos DNI como identificador
-        String consulta = "UPDATE clientes SET nombre=?, apellidos=?, dni=?, fechaNacimiento=?, telefono=?, email=?, telefonoUrgencia=?, certificacion=?, numeroSeguro=?, seguroHasta=? WHERE dni=?";
+        String consulta = "UPDATE clientes SET nombre=?, apellidos=?, dni=?, fechaNacimiento=?, telefono=?, email=?, telefonoUrgencia=?, certificacion=?, numeroSeguro=?, seguroHasta=? WHERE idCliente=?";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(consulta)) {
             stmt.setString(1, cliente.getNombre());
@@ -149,7 +148,7 @@ public class ClienteDAOImpl implements ClienteDAO {
             stmt.setString(8, cliente.getCertificacion() != null ? cliente.getCertificacion().name() : null);
             stmt.setString(9, cliente.getNumeroSeguro());
             stmt.setDate(10, cliente.getSeguroHasta() != null ? Date.valueOf(cliente.getSeguroHasta()) : null);
-            stmt.setString(11, cliente.getDni());
+            stmt.setInt(11, cliente.getIdCliente());
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error al modificar cliente: " + e.getMessage());
