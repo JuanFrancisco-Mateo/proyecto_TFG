@@ -23,9 +23,8 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
             try (ResultSet rdo = sentencia.executeQuery()) {
                 if (!rdo.next()) {
-                    return null; //Si no encuentra un profesor
+                    return null;
                 } else {
-                    //habra que comprobar luego los nombres de los campos en las tablas
                     String nombre = rdo.getString("nombre");
                     Rol rol = Rol.valueOf(rdo.getString("rol"));
                     int id = rdo.getInt("idUsuario");
@@ -63,7 +62,6 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             }else{
                 System.out.println("Usuario creado corrrectamente");
             }
-            System.out.println("Filas afectadas: " + filas);
         }catch (SQLException e){
             System.err.println("Error al añadir el cliente: " + e.getMessage());
         }
@@ -107,13 +105,13 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             filas=sentencia.executeUpdate();
 
             if(filas==0){
-                System.out.println("Profesor no se ha podido eliminar");
+                System.out.println("Usuario no se ha podido eliminar");
             }else{
-                System.out.println("Profesor eliminado corrrectamente");
+                System.out.println("Usuario eliminado correctamente");
             }
 
         }catch (SQLException e){
-            System.err.println("Error al eliminar el profesor: " + e.getMessage());
+            System.err.println("Error al eliminar el usuario: " + e.getMessage());
         }
     }
 }

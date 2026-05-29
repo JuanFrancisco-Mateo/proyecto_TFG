@@ -47,10 +47,8 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
 
 
     public void initialize(){
-        /*
         //recuperamos el usuario que inicio sesion
-         Usuario usuario = Sesion.recuperarUsuario();
-         */
+        Usuario usuario = Sesion.recuperarUsuario();
 
         //La primera vista que se muestra es la del calendario (Inicio)
         try {
@@ -69,15 +67,16 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
         }catch(IOException e){
             System.err.println("0");
         }
-        /*
-        menuUsuario.setText(usuario.getNombre());
-        //al inicio comprueba el rol para poner el menu administrador o no
-        if(usuario.getRol()!= Rol.ADMINISTRADOR){ //Solo si es administrador puede ver la opcion administracion en el menu
-          btnAdministracion.setVisible(false);
-        }
-         */
-        menuUsuario.setText("Nombre del usuario");
 
+        // Mostrar el nombre del usuario y controlar permisos
+        if (usuario != null) {
+            menuUsuario.setText(usuario.getNombre());
+            if (usuario.getRol() != Rol.ADMINISTRADOR) {
+                btnAdministracion.setVisible(false);
+            }
+        } else {
+            menuUsuario.setText("Sin sesión");
+        }
     }
 
     @FXML
@@ -140,9 +139,7 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
 
     @FXML
     public void cerrarSesion(ActionEvent actionEvent) {
-        /*
         Sesion.cerrarSesion();
-         */
         Stage ventana= (Stage) btnInicio.getScene().getWindow();
         salir(ventana);
 
