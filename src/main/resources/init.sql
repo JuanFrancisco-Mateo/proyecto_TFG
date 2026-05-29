@@ -1,6 +1,5 @@
 -- ============================================
 -- SCRIPT DE INICIALIZACIÓN - CENTRO DE BUCEO
--- MariaDB
 -- ============================================
 
 CREATE DATABASE IF NOT EXISTS centro_buceo;
