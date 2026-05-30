@@ -24,9 +24,8 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
             try (ResultSet rdo = sentencia.executeQuery()) {
                 if (!rdo.next()) {
-                    return null; //Si no encuentra un profesor
+                    return null;
                 } else {
-                    //habra que comprobar luego los nombres de los campos en las tablas
                     String nombre = rdo.getString("nombre");
                     String apellidos = rdo.getString("apellidos");
                     Rol rol = Rol.valueOf(rdo.getString("rol"));
@@ -47,8 +46,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     }
     @Override
     public void crearUsuario(String nombre, String email, String tlf, String userName, String passwordHash, Rol rol){
-        final String consulta = "INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES (?, ?, ?)";
-        int filas=0;
+        final String consulta = "INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES (?, ?, ?, ?, ?, ?)";
 
         try(var conexion  = db.getConnection();
             var sentencia = conexion.prepareStatement(consulta) ){
@@ -59,43 +57,51 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             sentencia.setString(4, userName);
             sentencia.setString(5, passwordHash);
             sentencia.setString(6, rol.toString());
-            filas=sentencia.executeUpdate();
+            sentencia.executeUpdate();
 
-            if(filas==0){
-                System.out.println("No se ha podido crear el usuario");
-            }else{
-                System.out.println("Usuario creado corrrectamente");
-            }
-            System.out.println("Filas afectadas: " + filas);
         }catch (SQLException e){
             System.err.println("Error al añadir el cliente: " + e.getMessage());
         }
     }
     @Override
-    public void modifUsuario(int idUsuario, String email, String tlf){}
+    public void modifUsuario(int idUsuario, String email, String tlf){
+        String consulta = "UPDATE usuario SET email = ?, telefono = ? WHERE idUsuario = ?";
+        try (var conexion = db.getConnection();
+             var sentencia = conexion.prepareStatement(consulta)) {
+            sentencia.setString(1, email);
+            sentencia.setString(2, tlf);
+            sentencia.setInt(3, idUsuario);
+            sentencia.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al modificar usuario: " + e.getMessage());
+        }
+    }
 
     @Override
-    public void modifPassword(int idUsuario, String password){}
+    public void modifPassword(int idUsuario, String password){
+        String consulta = "UPDATE usuario SET passwordHash = ? WHERE idUsuario = ?";
+        try (var conexion = db.getConnection();
+             var sentencia = conexion.prepareStatement(consulta)) {
+            sentencia.setString(1, password);
+            sentencia.setInt(2, idUsuario);
+            sentencia.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al modificar password: " + e.getMessage());
+        }
+    }
 
     @Override
     public void eliminarUsuario(String userName){
-        String consulta = "DELETE FROM usuario WHERE t_profesor.username = ?";
-        int filas=0;
+        String consulta = "DELETE FROM usuario WHERE username = ?";
 
         try(var conexion  = db.getConnection();
             var sentencia = conexion.prepareStatement(consulta) ){
 
             sentencia.setString(1, userName);
-            filas=sentencia.executeUpdate();
-
-            if(filas!=0){
-                System.out.println("Profesor no se ha podido eliminar");
-            }else{
-                System.out.println("Profesor eliminado corrrectamente");
-            }
+            sentencia.executeUpdate();
 
         }catch (SQLException e){
-            System.err.println("Error al eliminar el profesor: " + e.getMessage());
+            System.err.println("Error al eliminar el usuario: " + e.getMessage());
         }
     }
 }

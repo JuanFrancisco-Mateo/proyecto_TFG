@@ -31,7 +31,7 @@ public class CrearClienteControlador {
     @javafx.fxml.FXML
     private DatePicker txtFechaValidez;
     @javafx.fxml.FXML
-    private TextField txtCertificado;
+    private ComboBox<Certificacion> cbCertificado;
     @javafx.fxml.FXML
     private RadioButton btnPresentado;
     @javafx.fxml.FXML
@@ -53,9 +53,10 @@ public class CrearClienteControlador {
 
     public void initialize(){
         db = new DatabaseConnection();
-     // clienteDAO = new ClienteDAOImpl(db);
+        clienteDAO = new ClienteDAOImpl(db);
 
         cbEspecialidades.getItems().setAll(Especialidad.values());
+        cbCertificado.getItems().setAll(Certificacion.values());
         log.info("Se abre la ventana para crear un nuevo cliente");
 
     }
@@ -79,7 +80,6 @@ public class CrearClienteControlador {
                 txtApellidos.getText().isEmpty() ||
                 txtEmail.getText().isEmpty() ||
                 txtDni.getText().isEmpty() ||
-                txtCertificado.getText().isEmpty() ||
                 txtSeguro.getText().isEmpty() ||
                 txtTlfEmergencia.getText().isEmpty()
 
@@ -97,19 +97,19 @@ public class CrearClienteControlador {
                cliente.setApellidos(txtApellidos.getText());
                cliente.setDni(txtDni.getText());
                cliente.setEmail(txtEmail.getText());
-               cliente.setTelefono(Integer.parseInt(txtTlf.getText()));
+               cliente.setTelefono(txtTlf.getText());
                cliente.setNumeroSeguro(txtSeguro.getText());
                cliente.setFechaNacimiento(txtFecha.getValue());
                cliente.setSeguroHasta(txtFechaValidez.getValue());
                cliente.setFechaExp(txtFechaCertificado.getValue());
-               cliente.setCertificacion(Certificacion.valueOf(txtCertificado.getText()));
+               cliente.setCertificacion(cbCertificado.getValue());
                cliente.setTelefonoUrgencia(txtTlfEmergencia.getText());
 
                //Especialidades
                cliente.setEspecialidades(
                        new ArrayList<>(lvEspecialidades.getItems())
                );
-               //clienteDAO.crearCliente(cliente);
+               clienteDAO.crearCliente(cliente);
                log.info("Se ha creado un nuevo cliente");
            }catch (NumberFormatException e){
                Alert alerta = new Alert(Alert.AlertType.ERROR);

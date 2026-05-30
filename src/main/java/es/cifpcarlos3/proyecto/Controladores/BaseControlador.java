@@ -47,7 +47,6 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
     @FXML
     private MenuButton btnAdministracion;
 
-    private static final Logger log = LogManager.getLogger(BaseControlador.class);
 
     public void initialize(){
 
@@ -73,20 +72,21 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
             System.err.println("Error al cargar la vista del calendario");
             log.warn("Error al cargar el calendario");
         }
-
+        /*
         menuUsuario.setText(usuario.getNombre());
         //al inicio comprueba el rol para poner el menu administrador o no
         if(usuario.getRol()!= Rol.ADMINISTRADOR){ //Solo si es administrador puede ver la opcion administracion en el menu
           btnAdministracion.setVisible(false);
-            log.info("El usuario no es adminsitrador por lo que no tiene acceso a la opcion Administracion del menu lateral");
         }
+         */
+        menuUsuario.setText("Nombre del usuario");
 
     }
 
     @FXML
     public void irReservas(Event event) {
         try {
-            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearReservas.fxml"));
+            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("reservas.fxml"));
             AnchorPane centro = vista.load();
 
             contenido.getChildren().clear();
@@ -96,18 +96,16 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
             AnchorPane.setRightAnchor(centro, 0.0);
 
             contenido.getChildren().setAll(centro);
-            log.info("El usuario ha accedido a 'Nueva reserva'");
 
         }catch(IOException e){
             System.err.println("Error al cargar la vista Reservas");
-            log.warn("Error al cargar la vista Reservas");
         }
     }
 
     @FXML
     public void irClientes(Event event) {
         try {
-            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("listaClientes.fxml"));
+            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("clientes.fxml"));
             AnchorPane centro = vista.load();
 
             contenido.getChildren().clear();
@@ -117,10 +115,9 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
             AnchorPane.setRightAnchor(centro, 0.0);
 
             contenido.getChildren().setAll(centro);
-            log.info("El usuario ha accedido a 'Clientes'");
+
         }catch(IOException e){
             System.err.println("Error al cargar la vista clientes");
-            log.warn("Error al cargar la lista de clientes del menu lateral");
         }
     }
 
@@ -138,11 +135,9 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
             AnchorPane.setRightAnchor(centro, 0.0);
 
             contenido.getChildren().setAll(centro);
-            log.info("El usuario ha accedido a 'Inicio'");
 
         }catch(IOException e){
             System.err.println("Error al cargar la vista de Inicio");
-            log.warn("Error al cargar la vista de inicio en el menu lateral");
         }
     }
 
@@ -153,7 +148,7 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
          */
         Stage ventana= (Stage) btnInicio.getScene().getWindow();
         salir(ventana);
-        log.info("El usuario ha cerrado sesion");
+
     }
     public void salir(Stage ventana){
             try {
@@ -170,7 +165,6 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
 
             } catch (IOException e) {
                 System.err.println("ERROR. Fallo al cargar la nueva vista");
-                log.warn("Error al cargar la pantalla de login tras cerrar sesion");
             }
             ventana.close();
         }
@@ -184,45 +178,30 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
 
             contenido.getChildren().clear();
             contenido.getChildren().add(centro);
-            log.info("El usuario ha accedido a 'Perfil'");
+
         }catch(IOException e){
             System.err.println("Error al cargar la vista del perfil");
-            log.warn("Error al cargar el perfil del menu superior");
         }
     }
 
     @FXML
-    public void irUsuarios(ActionEvent actionEvent) {
+    public void crearUsuario(ActionEvent actionEvent) {
         try {
-            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("listaUsuarios.fxml"));
+            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearUsuario.fxml"));
             AnchorPane centro = vista.load();
 
             contenido.getChildren().clear();
             contenido.getChildren().add(centro);
 
             contenido.getChildren().setAll(centro);
-            log.info("El usuario (administrador) ha accedido a 'Usuarios'");
+
         }catch(IOException e){
-            System.err.println("Error al cargar la vista lista de usuarios");
-            log.warn("Error al cargar la lista de usuarios del menu lateral");
+            System.err.println("Error al cargar la vista de creación de usuarios");
         }
     }
 
     @FXML
-    public void irInstructores(ActionEvent actionEvent) {
-        try {
-            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("listaInstructores.fxml"));
-            AnchorPane centro = vista.load();
-
-            contenido.getChildren().clear();
-            contenido.getChildren().add(centro);
-
-            contenido.getChildren().setAll(centro);
-            log.info("El usuario (administrador) ha accedido a 'Instructores'");
-        }catch(IOException e){
-            System.err.println("Error al cargar la vista lista de usuarios");
-            log.warn("Error al cargar la lista de instructores del menu lateral");
-        }
+    public void crearInstructor(ActionEvent actionEvent) {
     }
 }
 

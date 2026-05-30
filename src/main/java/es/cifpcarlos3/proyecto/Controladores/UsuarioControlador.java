@@ -68,7 +68,7 @@ public class UsuarioControlador {
 
         usuario.setRol(nuevoRol);
 
-        //usuarioDAO.modificarRol(usuario.getIdUsuario(), nuevoRol);
+        usuarioDAO.modificarRol(usuario.getIdUsuario(), nuevoRol);
         log.info("Rol actualizado del usuario");
     }
 }

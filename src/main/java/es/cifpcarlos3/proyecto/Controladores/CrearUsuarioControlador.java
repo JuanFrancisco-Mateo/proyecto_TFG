@@ -11,10 +11,21 @@ import javafx.scene.control.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+
+import java.util.Base64;
 
 public class CrearUsuarioControlador {
+
 
 
     @javafx.fxml.FXML
@@ -28,17 +39,16 @@ public class CrearUsuarioControlador {
     @javafx.fxml.FXML
     private TextField txtEmail;
     @javafx.fxml.FXML
-    private DatePicker txtFecha;
-    @javafx.fxml.FXML
-    private TextField txtDni;
-    @javafx.fxml.FXML
     private TextField txtTlf;
     @javafx.fxml.FXML
     private TextField txtPassword;
+    @FXML
+    private TextField txtUsername;
 
     private DatabaseConnection db;
     private UsuarioDAO usuarioDAO;
     private static final Logger log = LogManager.getLogger(CrearUsuarioControlador.class);
+
 
     public void initialize(){
         db = new DatabaseConnection();
@@ -47,14 +57,13 @@ public class CrearUsuarioControlador {
     }
     @javafx.fxml.FXML
     public void crearUsuario(ActionEvent actionEvent) {
-        if(txtApellidos.getText().isEmpty() ||
+        if (txtApellidos.getText().isEmpty() ||
                 txtNombre.getText().isEmpty()
-                || txtDni.getText().isBlank()
+                || txtUsername.getText().isBlank()
                 || txtEmail.getText().isBlank()
                 || txtTlf.getText().isBlank()
                 || txtPassword.getText().isBlank()
-                || txtFecha.getValue() == null
-                || cbRoles.getValue() == null){
+                || cbRoles.getValue() == null) {
 
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Campos vacíos");
@@ -63,11 +72,11 @@ public class CrearUsuarioControlador {
             alerta.showAndWait();
             log.warn("No se puede guardar el usuario, faltan datos por completar");
 
-        }else {
+        } else {
             Pattern patternTlf = Pattern.compile("[0-9]{9}");
             Matcher matcherTlf = patternTlf.matcher(txtTlf.getText());
 
-            if(!matcherTlf.matches()){
+            if (!matcherTlf.matches()) {
 
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setTitle("Formato incorrecto");
@@ -81,22 +90,19 @@ public class CrearUsuarioControlador {
             }
 
             try {
-                Usuario usuario = new Usuario();
-                usuario.setRol(cbRoles.getValue());
-                usuario.setNombre(txtNombre.getText());
-                usuario.setEmail(txtEmail.getText());
-                usuario.setApellidos(txtApellidos.getText());
-                usuario.setTelefono(txtTlf.getText());
-                usuario.setDni(txtDni.getText());
-                usuario.setFechaNacimiento(txtFecha.getValue());
-                usuario.setRol(cbRoles.getValue());
-                usuario.setPasswordHash(PasswordUtil.hashPassword(txtPassword.getText()));
-                //usuarioDAO.crearUsuario(usuario);
+                Rol rol =cbRoles.getValue();
+                String nombre=txtNombre.getText();
+                String apellidos= txtApellidos.getText();
+                String email = txtEmail.getText();
+                String tlf=txtTlf.getText();
+                String username = txtUsername.getText();
+                String passwordHash = PasswordUtil.hashPassword(txtPassword.getText());
+                usuarioDAO.crearUsuario(nombre, apellidos, email, tlf, username, passwordHash, rol);
 
                 //se cierra la ventana
                 btnGuardarUsuario.getScene().getWindow().hide();
 
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setTitle("Formato incorrecto");
                 alerta.setHeaderText("ERROR");
@@ -106,4 +112,5 @@ public class CrearUsuarioControlador {
             }
         }
     }
+
 }

@@ -2,7 +2,7 @@ module es.cifpcarlos3.proyecto {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.calendarfx.view;
-    requires static lombok;
+    requires lombok;
     requires java.sql;
     requires jbcrypt;
     requires org.apache.logging.log4j;

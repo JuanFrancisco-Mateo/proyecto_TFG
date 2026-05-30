@@ -7,6 +7,7 @@ import es.cifpcarlos3.proyecto.model.Rol;
 import es.cifpcarlos3.proyecto.model.Sesion;
 import es.cifpcarlos3.proyecto.model.Usuario;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
+import es.cifpcarlos3.proyecto.util.PasswordUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,30 +38,30 @@ public class LoginControlador {
 
 
     private static final Logger log = LogManager.getLogger(LoginControlador.class);
-    /*
-       DatabaseConnection db = new DatabaseConnection();
-       private UsuarioDAO usuarioDAO = new UsuarioDAOImpl(db);
 
-     */
+    DatabaseConnection db = new DatabaseConnection();
+    private UsuarioDAO usuarioDAO = new UsuarioDAOImpl(db);
+
     @FXML
     public void acceder(ActionEvent actionEvent) {
         String user = tfUserName.getText();
         String pass = tfPassword.getText();
         log.info("Intento de acceso a la aplicacion con el usuario "+user);
-        /*
+
+        // Buscar el usuario en la base de datos
         Usuario usuario=usuarioDAO.devolverUser(user);
 
-        //hacemos la comprobacion
-        if(usuario==null){//si el no encuentra ningun usuario con ese username devuelve un mensaje de error
-
+        // Si el usuario no existe
+        if (usuario == null) {
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error en el usuario");
             alerta.setHeaderText("ERROR");
             alerta.setContentText("Usuario no encontrado");
             alerta.showAndWait();
             log.warn("No se ha encontrado ese nombre de usuario en la base de datos");
+            //return; ??
         }else{ //Si lo encuentra hashea la contraseña y la comprueba con la guardada en la base de datos
-            if(PasswordUtil.verificarPassword(password, usuario.getPasswordHash())){
+            if(PasswordUtil.verificarPassword(pass, usuario.getPasswordHash())){
                 //Si coincide la contraseña del usuario con la introducida
                 log.info("Usuario y contraseña correctos, se crea una nueva sesion");
                 //Creamos una sesion con el usuario para poder tenerlo en las diferentes ventanas
@@ -80,8 +81,7 @@ public class LoginControlador {
                 alerta.showAndWait();
             }
         }
-
-         */
+        /*
         if ("email@prueba.com".equals(user) && "prueba".equals(pass)) {
 
             Usuario usuarioFalso = new Usuario();
@@ -103,10 +103,12 @@ public class LoginControlador {
             alerta.setHeaderText("ERROR");
             alerta.setContentText("Usuario o contraseña incorrectos");
             alerta.showAndWait();
+            return;
         }
 
+ */
 
-    }
+        }
 
     public void ventanaInicio(Stage ventana){
         try {

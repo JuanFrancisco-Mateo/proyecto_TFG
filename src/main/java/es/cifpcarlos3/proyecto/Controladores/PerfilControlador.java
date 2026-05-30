@@ -59,6 +59,7 @@ public class PerfilControlador {
     @javafx.fxml.FXML
     private TextField txtTlf;
 
+
     private UsuarioDAO usuarioDAO;
     DatabaseConnection db;
     Usuario usuario;
@@ -82,81 +83,108 @@ public class PerfilControlador {
         btnGuardarDatos.setVisible(false);
 
 
-       txtNombre.setText(usuario.getNombre());
-       txtRol.setText(usuario.getRol().toString());
-       txtEmail.setText(usuario.getEmail());
-       txtTlf.setText(usuario.getTelefono());
-       txtUserName.setText(usuario.getEmail());
+        // Mostrar datos del usuario
+        if (usuario != null) {
+            txtNombre.setText(usuario.getNombre());
+            txtRol.setText(usuario.getRol().toString());
+            txtEmail.setText(usuario.getEmail());
+            txtTlf.setText(usuario.getTelefono());
+            txtUserName.setText(usuario.getUsername());
+        }
 
         txtTlf.setDisable(true);
         txtEmail.setDisable(true);
         txtRol.setDisable(true);
         txtNombre.setDisable(true);
+        txtUserName.setDisable(true);
 
     }
 
 
     @javafx.fxml.FXML
     public void modificarDatos(ActionEvent actionEvent) {
+
         log.info("Se van a modificar los datos del usuario");
-        if(txtEmail.getText().isEmpty() || txtTlf.getText().isEmpty()){
+
+        String email = txtEmail.getText();
+        String telefono = txtTlf.getText();
+
+        if (email.isEmpty() || telefono.isEmpty()){
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Campos vacíos");
             alerta.setHeaderText("ERROR");
             alerta.setContentText("Faltan datos");
             alerta.showAndWait();
             log.warn("No se pueden cambiar los datos del usuario ya que hay campos vacios");
-        }else{
-            Pattern patternTlf = Pattern.compile("[0-9]{9}");
-            Matcher matcherTlf = patternTlf.matcher(txtTlf.getText());
-            if(matcherTlf.matches()){
-                String email= txtEmail.getText();
-                String telefono=txtTlf.getText();
-              //usuarioDAO.modifUsuario(usuario.getIdUsuario(), email, telefono);
-                usuario.setEmail(email);
-                usuario.setTelefono(telefono);
-                txtEmail.setText(email);
-                txtTlf.setText(telefono);
-                txtTlf.setDisable(true);
-                txtEmail.setDisable(true);
-                btnModifDatos.setVisible(true);
-                btnGuardarDatos.setVisible(false);
-                log.info("Se han cambiado los datos del usuario");
-            }else{
-                Alert alerta = new Alert(Alert.AlertType.ERROR);
-                alerta.setTitle("Formato incorrecto");
-                alerta.setHeaderText("ERROR");
-                alerta.setContentText("El formato del teléfono es incorrecto");
-                alerta.showAndWait();
-                log.warn("Los datos del usuario no se han podido modificar porque el número de telefono no cumple el formato");
-            }
+            return;
+        }
+        // Validar email simple (que tenga @)
+        if (!email.contains("@")) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Email inválido");
+            alerta.setHeaderText("ERROR");
+            alerta.setContentText("El email no es válido");
+            alerta.showAndWait();
+            return;
         }
 
+        // Validar teléfono (9 dígitos)
+        if (!telefono.matches("[0-9]{9}")) {
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Teléfono inválido");
+            alerta.setHeaderText("ERROR");
+            alerta.setContentText("El teléfono debe tener 9 dígitos");
+            alerta.showAndWait();
+            return;
+        }
+
+        // Guardar cambios
+        usuarioDAO.modifUsuario(usuario.getIdUsuario(), email, telefono);
+        usuario.setEmail(email);
+        usuario.setTelefono(telefono);
+        txtEmail.setText(email);
+        txtTlf.setText(telefono);
+        txtTlf.setDisable(true);
+        txtEmail.setDisable(true);
+        btnModifDatos.setVisible(true);
+        btnGuardarDatos.setVisible(false);
+        log.info("Se han cambiado los datos del usuario");
+
+        //informamos al usuario
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Datos modificados");
+        alerta.setHeaderText("Éxito");
+        alerta.setContentText("Datos actualizados correctamente");
+        alerta.showAndWait();
 
     }
 
     @javafx.fxml.FXML
     public void cambiarPassword(Event event) {
         log.info("Se va a cambiar la contraseña del usuario");
-        if(tfPassword.getText().isBlank() || tfPasswordNueva.getText().isBlank() || tfRepetir.getText().isBlank()){
+
+        String passActual = tfPassword.getText();
+        String passNueva = tfPasswordNueva.getText();
+        String passRepetir = tfRepetir.getText();
+
+        if (passActual.isBlank() || passNueva.isBlank() || passRepetir.isBlank()){
+
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Campos vacíos");
             alerta.setHeaderText("ERROR");
             alerta.setContentText("Tiene que completar los tres campos");
             alerta.showAndWait();
             log.warn("No se pueden cambiar la contraseña, hay campos vacios");
+            return;
         }else {
-            String password = tfPassword.getText();
-            String passwordNueva = tfPasswordNueva.getText();
-            String passwordRepetir = tfRepetir.getText();
-            if (!PasswordUtil.verificarPassword(password, usuario.getPasswordHash())) {
+            if (!PasswordUtil.verificarPassword(passActual, usuario.getPasswordHash())) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setTitle("Error en la contraseña");
                 alerta.setHeaderText("ERROR");
                 alerta.setContentText("Contraseña incorrecta");
                 alerta.showAndWait();
                 log.warn("La contraseña es incorrecta, no se puede cambiar");
-            } else if (!passwordNueva.equals(passwordRepetir)) {
+            } else if (!passNueva.equals(passRepetir)) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setTitle("Error en la contraseña");
                 alerta.setHeaderText("ERROR");
@@ -164,12 +192,9 @@ public class PerfilControlador {
                 alerta.showAndWait();
                 log.warn("Las contraseñas no coinciden, no se puede cambiar");
             } else {
-                Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
-                alerta.setHeaderText("Confirmación");
-                alerta.setContentText("Contraseña cambiada con éxito");
-                alerta.showAndWait();
-                String nuevaHash = PasswordUtil.hashPassword(passwordNueva);
-                //usuarioDAO.modifPassword(usuario.getIdUsuario(), nuevaHash);
+
+                String nuevaHash = PasswordUtil.hashPassword(passNueva);
+                usuarioDAO.modifPassword(usuario.getIdUsuario(), nuevaHash);
                 usuario.setPasswordHash(nuevaHash);
                 log.info("La contraseña se ha cambiado");
                 //Se vuelven a ocultar los campos
@@ -181,12 +206,14 @@ public class PerfilControlador {
                 tfRepetir.setVisible(false);
                 btnGuardar.setVisible(false);
                 btnCambioPassword.setVisible(true);
+
+                //informamos al usuario
+                Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+                alerta.setHeaderText("Confirmación");
+                alerta.setContentText("Contraseña cambiada con éxito");
+                alerta.showAndWait();
             }
         }
-
-
-
-
     }
 
     @javafx.fxml.FXML

@@ -1,0 +1,170 @@
+-- ============================================
+-- SCRIPT DE INICIALIZACIÓN - CENTRO DE BUCEO
+-- ============================================
+
+CREATE DATABASE IF NOT EXISTS centro_buceo;
+USE centro_buceo;
+
+-- TABLA: usuarios
+CREATE TABLE IF NOT EXISTS usuario (
+    idUsuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    telefono VARCHAR(20),
+    username VARCHAR(50) NOT NULL UNIQUE,
+    passwordHash VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) NOT NULL CHECK (rol IN ('EMPLEADO', 'ADMINISTRADOR'))
+);
+
+-- TABLA: clientes
+CREATE TABLE IF NOT EXISTS clientes (
+    idCliente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    fechaNacimiento DATE,
+    telefono INT,
+    email VARCHAR(100),
+    telefonoUrgencia VARCHAR(20),
+    certificacion VARCHAR(30),
+    numeroSeguro VARCHAR(50),
+    seguroHasta DATE
+);
+
+-- TABLA: instructores
+CREATE TABLE IF NOT EXISTS instructores (
+    idInstructor INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    fechaNacimiento DATE,
+    telefono INT,
+    email VARCHAR(100),
+    telefonoUrgencia VARCHAR(20),
+    certificacion VARCHAR(30)
+);
+
+-- TABLA: barcos
+CREATE TABLE IF NOT EXISTS barcos (
+    idBarco INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    capacidad INT NOT NULL
+);
+
+-- TABLA: inmersion (tabla padre)
+CREATE TABLE IF NOT EXISTS inmersion (
+    idInmersion INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    certificacionMinima VARCHAR(30),
+    plazasMax INT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    duracionMin INT,
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('BARCO', 'COSTA'))
+);
+
+-- TABLA: inmersion_barco (hereda de inmersion)
+CREATE TABLE IF NOT EXISTS inmersion_barco (
+    idInmersion INT PRIMARY KEY,
+    idBarco INT NOT NULL,
+    FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE,
+    FOREIGN KEY (idBarco) REFERENCES barcos(idBarco) ON DELETE CASCADE
+);
+
+-- TABLA: inmersion_costa (hereda de inmersion)
+CREATE TABLE IF NOT EXISTS inmersion_costa (
+    idInmersion INT PRIMARY KEY,
+    lugar VARCHAR(200) NOT NULL,
+    FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE
+);
+
+-- TABLA: especialidades
+CREATE TABLE IF NOT EXISTS especialidades (
+    idEspecialidad INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- TABLA: reservas
+CREATE TABLE IF NOT EXISTS reservas (
+    idReserva INT AUTO_INCREMENT PRIMARY KEY,
+    idInmersion INT NOT NULL,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    idInstructor INT,
+    FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE,
+    FOREIGN KEY (idInstructor) REFERENCES instructores(idInstructor) ON DELETE SET NULL
+);
+
+-- TABLA: reserva_clientes (relación N:M entre reservas y clientes)
+CREATE TABLE IF NOT EXISTS reserva_clientes (
+    idReserva INT NOT NULL,
+    idCliente INT NOT NULL,
+    PRIMARY KEY (idReserva, idCliente),
+    FOREIGN KEY (idReserva) REFERENCES reservas(idReserva) ON DELETE CASCADE,
+    FOREIGN KEY (idCliente) REFERENCES clientes(idCliente) ON DELETE CASCADE
+);
+
+-- TABLA: cliente_especialidad (relación N:M entre clientes y especialidades)
+CREATE TABLE IF NOT EXISTS cliente_especialidad (
+    idCliente INT NOT NULL,
+    idEspecialidad INT NOT NULL,
+    PRIMARY KEY (idCliente, idEspecialidad),
+    FOREIGN KEY (idCliente) REFERENCES clientes(idCliente) ON DELETE CASCADE,
+    FOREIGN KEY (idEspecialidad) REFERENCES especialidades(idEspecialidad) ON DELETE CASCADE
+);
+
+-- TABLA: instructor_especialidad (relación N:M entre instructores y especialidades)
+CREATE TABLE IF NOT EXISTS instructor_especialidad (
+    idInstructor INT NOT NULL,
+    idEspecialidad INT NOT NULL,
+    PRIMARY KEY (idInstructor, idEspecialidad),
+    FOREIGN KEY (idInstructor) REFERENCES instructores(idInstructor) ON DELETE CASCADE,
+    FOREIGN KEY (idEspecialidad) REFERENCES especialidades(idEspecialidad) ON DELETE CASCADE
+);
+
+-- ============================================
+-- DATOS DE PRUEBA
+-- ============================================
+
+-- Especialidades
+INSERT INTO especialidades (nombre) VALUES ('PROFUNDO'), ('APNEA'), ('CORRIENTES'), ('PECIOS'), ('CUEVAS');
+
+-- Usuarios (contraseñas en Base64: "admin123" -> YWRtaW4xMjM=, "recepcion" -> cmVjZXBjaW9u)
+INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES
+('Administrador Principal', 'admin@centrobuceo.com', '600111222', 'admin', 'YWRtaW4xMjM=', 'ADMINISTRADOR'),
+('María López', 'maria@centrobuceo.com', '600333444', 'maria', 'bWFyaWExMjM=', 'EMPLEADO');
+
+-- Clientes
+INSERT INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta) VALUES
+('Carlos', 'García Ruiz', '12345678A', '1990-05-15', 600111333, 'carlos@email.com', '600111334', 'OWD', 'SEGURO001', '2026-12-31'),
+('Ana', 'Martínez López', '87654321B', '1985-08-22', 600222444, 'ana@email.com', '600222445', 'AOWD', 'SEGURO002', '2026-12-31'),
+('Pedro', 'Sánchez Gómez', '11111111C', '1995-02-10', 600333555, 'pedro@email.com', '600333556', 'RESCUE', 'SEGURO003', '2026-12-31'),
+('Laura', 'Fernández Díaz', '22222222D', '2000-11-30', 600444666, 'laura@email.com', '600444667', 'SCUBA', 'SEGURO004', '2026-12-31'),
+('Javier', 'Rodríguez Pérez', '33333333E', '1988-07-05', 600555777, 'javier@email.com', '600555778', 'MASTERSCUBA', 'SEGURO005', '2026-12-31');
+
+-- Instructores
+INSERT INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion) VALUES
+('Roberto', 'Díaz Martín', '44444444F', '1980-03-20', 600666888, 'roberto@centrobuceo.com', '600666889', 'OWSI'),
+('Elena', 'Torres Ruiz', '55555555G', '1985-09-12', 600777999, 'elena@centrobuceo.com', '600777990', 'DIVEMASTER');
+
+-- Barcos
+INSERT INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8);
+
+-- Inmersiones (BARCO)
+INSERT INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
+('Bautismo en Barco', 'SCUBA', 10, 45.00, 30, 'BARCO'),
+('Inmersión Arrecife', 'OWD', 8, 55.00, 45, 'BARCO');
+INSERT INTO inmersion_barco (idInmersion, idBarco) VALUES (1, 1), (2, 2);
+
+-- Inmersiones (COSTA)
+INSERT INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
+('Calas Escondidas', 'SCUBA', 6, 35.00, 60, 'COSTA'),
+('Fondo Marino', 'AOWD', 4, 40.00, 50, 'COSTA');
+INSERT INTO inmersion_costa (idInmersion, lugar) VALUES (3, 'Cala del Bosque'), (4, 'Playa del Faro');
+
+-- Reservas (ejemplos)
+INSERT INTO reservas (idInmersion, fecha, hora, idInstructor) VALUES
+(1, CURDATE() + INTERVAL 1 DAY, '10:00:00', 1),
+(2, CURDATE() + INTERVAL 2 DAY, '15:00:00', 2);
+
+-- Clientes en reservas
+INSERT INTO reserva_clientes (idReserva, idCliente) VALUES (1, 1), (1, 2), (2, 3);

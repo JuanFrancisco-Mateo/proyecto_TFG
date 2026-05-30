@@ -30,7 +30,7 @@ public class ListaClientesControlador {
     @javafx.fxml.FXML
     private TableView<Cliente> tableClientes; //cada fila es un cliente
     @javafx.fxml.FXML
-    private TableColumn<Cliente, Integer> colTlf;
+    private TableColumn<Cliente, String> colTlf;
     @javafx.fxml.FXML
     private TableColumn<Cliente, String>colDni;
     @javafx.fxml.FXML
@@ -44,7 +44,7 @@ public class ListaClientesControlador {
     ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
 
     DatabaseConnection db = new DatabaseConnection();
-    //private ClienteDAO clienteDAO = new ClienteDAOImpl(db);
+    private ClienteDAO clienteDAO = new ClienteDAOImpl(db);
 
     public void initialize(){
 
@@ -76,11 +76,11 @@ public class ListaClientesControlador {
     }
 
     public void cargarClientes(){
-        /*
-        List<Cliente> clientes = clienteDAO.obtenerTodos();
+
+        List<Cliente> clientes = clienteDAO.listarClientes();
 
         listaClientes.setAll(clientes);
-         */
+
     }
 
 

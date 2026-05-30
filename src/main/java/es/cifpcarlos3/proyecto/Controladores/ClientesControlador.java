@@ -10,6 +10,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import es.cifpcarlos3.proyecto.HelloApplication;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ClientesControlador {
 
@@ -53,13 +63,13 @@ public class ClientesControlador {
     private DatabaseConnection db;
     private static final Logger log = LogManager.getLogger(ClientesControlador.class);
 
-    public void initialize(){
+
+    public void initialize() {
         db = new DatabaseConnection();
-        //clienteDAO = new ClienteDAOImpl(db);
+        clienteDAO = new ClienteDAOImpl(db);
         cbEspecialidad.getItems().setAll(Especialidad.values());
 
     }
-
     public void setCliente(Cliente cliente){
         this.cliente = cliente;
         //Ponemos todos los datos del cliente en los textfields
@@ -68,11 +78,13 @@ public class ClientesControlador {
         txtDni.setText(cliente.getDni());
         txtEmail.setText(cliente.getEmail());
         txtNombre.setText(cliente.getNombre());
-        txtTlf.setText(String.valueOf(cliente.getTelefono()));
+        txtTlf.setText(cliente.getTelefono());
         txtFecha.setValue(cliente.getFechaNacimiento());
         txtSeguro.setText(cliente.getNumeroSeguro());
         txtTlfEMergencia.setText(cliente.getTelefonoUrgencia());
-        lvEspecialidades.getItems().setAll(cliente.getEspecialidades());
+        if (lvEspecialidades != null) {
+            lvEspecialidades.getItems().setAll(cliente.getEspecialidades());
+        }
 
     }
 
@@ -83,7 +95,8 @@ public class ClientesControlador {
             //Para que no haya duplicados
             if(!lvEspecialidades.getItems().contains(especialidad)){
                 lvEspecialidades.getItems().add(especialidad);
-                //clienteDAO.addEspecialidad(cliente.getIdCliente(), especialidad);
+                int idEsp = clienteDAO.getIdEspecialidadPorNombre(especialidad.name());
+                clienteDAO.addEspecialidad(cliente.getIdCliente(), idEsp);
                 log.info("Se ha añadido una nueva especialidad a la lista del cliente");
             }
         }
@@ -111,7 +124,7 @@ public class ClientesControlador {
                 cliente.setNombre(txtNombre.getText());
                 cliente.setApellidos(txtApellidos.getText());
                 cliente.setEmail(txtEmail.getText());
-                cliente.setTelefono(Integer.parseInt(txtTlf.getText()));
+                cliente.setTelefono(txtTlf.getText());
                 cliente.setTelefonoUrgencia(txtTlfEMergencia.getText() );
                 cliente.setNumeroSeguro(txtSeguro.getText());
                 cliente.setFechaNacimiento(txtFecha.getValue());
@@ -119,7 +132,7 @@ public class ClientesControlador {
                 cliente.setSeguroHasta(txtFechaValidez.getValue());
                 cliente.setEspecialidades(lvEspecialidades.getItems());
 
-                // clienteDAO.modificarCliente(cliente);
+                clienteDAO.modifCliente(cliente);
                 log.info("Cliente modificado correctamente");
 
             }catch(NumberFormatException e){
@@ -134,4 +147,30 @@ public class ClientesControlador {
             }
 
     }
+
+/*
+    @FXML
+    public void crearCliente(ActionEvent actionEvent) {
+        try {
+            FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearCliente.fxml"));
+            Parent root = vista.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Crear Cliente");
+            stage.setScene(scene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(clientesContenido.getScene().getWindow());
+            stage.showAndWait();
+        } catch (IOException e) {
+            System.err.println("Error al cargar crear cliente: " + e.getMessage());
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
+            alerta.setTitle("Error");
+            alerta.setHeaderText("ERROR");
+            alerta.setContentText("No se pudo abrir el formulario de creación de cliente");
+            alerta.showAndWait();
+        }
+    }
+    */
+
 }
+

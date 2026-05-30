@@ -28,8 +28,6 @@ public class ListaUsuariosControlador {
     @javafx.fxml.FXML
     private TableColumn<Usuario, Integer> colTlf;
     @javafx.fxml.FXML
-    private TableColumn<Usuario, String> colDni;
-    @javafx.fxml.FXML
     private TableColumn<Usuario, Rol> colRol;
     @javafx.fxml.FXML
     private TableColumn<Usuario, String> colNombre;
@@ -53,7 +51,6 @@ public class ListaUsuariosControlador {
         usuario = Sesion.recuperarUsuario();
 
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         colTlf.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
@@ -72,11 +69,10 @@ public class ListaUsuariosControlador {
     }
 
     public void cargarUsuarios(){
-        /*
-        List<Usuario> usuarios = usuarioDAO.obtenerTodos();
 
+        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
         listaUsuarios.setAll(usuarios);
-        */
+
     }
 
     @javafx.fxml.FXML
