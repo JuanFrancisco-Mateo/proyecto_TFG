@@ -58,18 +58,17 @@ public class PerfilControlador {
     private TextField txtRol;
     @javafx.fxml.FXML
     private TextField txtTlf;
-    /*
+
     private UsuarioDAO usuarioDAO;
     DatabaseConnection db;
-     */
     Usuario usuario;
     private static final Logger log = LogManager.getLogger(PerfilControlador.class);
 
     public void initialize(){
-        /*
+
         db = new DatabaseConnection();
         usuarioDAO = new UsuarioDAOImpl(db);
-        */
+
         //recuperamos el usuario que inicio sesion
         usuario = Sesion.recuperarUsuario();
 
@@ -114,6 +113,8 @@ public class PerfilControlador {
                 String email= txtEmail.getText();
                 String telefono=txtTlf.getText();
               //usuarioDAO.modifUsuario(usuario.getIdUsuario(), email, telefono);
+                usuario.setEmail(email);
+                usuario.setTelefono(telefono);
                 txtEmail.setText(email);
                 txtTlf.setText(telefono);
                 txtTlf.setDisable(true);
@@ -169,6 +170,7 @@ public class PerfilControlador {
                 alerta.showAndWait();
                 String nuevaHash = PasswordUtil.hashPassword(passwordNueva);
                 //usuarioDAO.modifPassword(usuario.getIdUsuario(), nuevaHash);
+                usuario.setPasswordHash(nuevaHash);
                 log.info("La contraseña se ha cambiado");
                 //Se vuelven a ocultar los campos
                 txtPasswordNueva.setVisible(false);

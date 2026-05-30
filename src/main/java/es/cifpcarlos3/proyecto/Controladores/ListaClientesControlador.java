@@ -42,10 +42,10 @@ public class ListaClientesControlador {
 
     Usuario usuario;
     ObservableList<Cliente> listaClientes = FXCollections.observableArrayList();
-    /*
+
     DatabaseConnection db = new DatabaseConnection();
-    private ClienteDAO clienteDAO = new ClienteDAOImpl(db);
-*/
+    //private ClienteDAO clienteDAO = new ClienteDAOImpl(db);
+
     public void initialize(){
 
         tableClientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

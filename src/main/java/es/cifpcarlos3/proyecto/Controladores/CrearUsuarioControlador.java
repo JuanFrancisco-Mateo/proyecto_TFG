@@ -1,6 +1,7 @@
 package es.cifpcarlos3.proyecto.Controladores;
 
 import es.cifpcarlos3.proyecto.dao.UsuarioDAO;
+import es.cifpcarlos3.proyecto.dao.impl.UsuarioDAOImpl;
 import es.cifpcarlos3.proyecto.model.Rol;
 import es.cifpcarlos3.proyecto.model.Usuario;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
@@ -41,7 +42,7 @@ public class CrearUsuarioControlador {
 
     public void initialize(){
         db = new DatabaseConnection();
-        //usuarioDAO = new UsuarioDAOImpl(db);
+        usuarioDAO = new UsuarioDAOImpl(db);
         cbRoles.getItems().setAll(Rol.values());
     }
     @javafx.fxml.FXML

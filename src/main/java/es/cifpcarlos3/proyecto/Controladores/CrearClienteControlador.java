@@ -53,7 +53,7 @@ public class CrearClienteControlador {
 
     public void initialize(){
         db = new DatabaseConnection();
-     //   clienteDAO = new ClienteDAOImpl(db);
+     // clienteDAO = new ClienteDAOImpl(db);
 
         cbEspecialidades.getItems().setAll(Especialidad.values());
         log.info("Se abre la ventana para crear un nuevo cliente");
@@ -73,7 +73,6 @@ public class CrearClienteControlador {
 
     @javafx.fxml.FXML
     public void crearCliente(ActionEvent actionEvent) {
-
 
         if(txtNombre.getText().isEmpty() ||
                 txtTlf.getText().isEmpty() ||
@@ -104,6 +103,7 @@ public class CrearClienteControlador {
                cliente.setSeguroHasta(txtFechaValidez.getValue());
                cliente.setFechaExp(txtFechaCertificado.getValue());
                cliente.setCertificacion(Certificacion.valueOf(txtCertificado.getText()));
+               cliente.setTelefonoUrgencia(txtTlfEmergencia.getText());
 
                //Especialidades
                cliente.setEspecialidades(

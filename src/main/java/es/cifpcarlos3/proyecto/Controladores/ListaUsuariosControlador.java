@@ -1,10 +1,13 @@
 package es.cifpcarlos3.proyecto.Controladores;
 
 import es.cifpcarlos3.proyecto.HelloApplication;
+import es.cifpcarlos3.proyecto.dao.UsuarioDAO;
+import es.cifpcarlos3.proyecto.dao.impl.UsuarioDAOImpl;
 import es.cifpcarlos3.proyecto.model.Cliente;
 import es.cifpcarlos3.proyecto.model.Rol;
 import es.cifpcarlos3.proyecto.model.Sesion;
 import es.cifpcarlos3.proyecto.model.Usuario;
+import es.cifpcarlos3.proyecto.util.DatabaseConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -40,10 +43,10 @@ public class ListaUsuariosControlador {
     Usuario usuario;
     ObservableList<Usuario> listaUsuarios = FXCollections.observableArrayList();
 
-    /*
+
     DatabaseConnection db = new DatabaseConnection();
     private UsuarioDAO usuarioDAO = new UsuarioDAOImpl(db);
-*/
+
     public void initialize(){
         tableUsuarios.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 

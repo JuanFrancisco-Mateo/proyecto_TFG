@@ -1,6 +1,7 @@
 package es.cifpcarlos3.proyecto.Controladores;
 
 import es.cifpcarlos3.proyecto.dao.ClienteDAO;
+import es.cifpcarlos3.proyecto.dao.impl.ClienteDAOImpl;
 import es.cifpcarlos3.proyecto.model.Cliente;
 import es.cifpcarlos3.proyecto.model.Especialidad;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
@@ -71,7 +72,8 @@ public class ClientesControlador {
         txtFecha.setValue(cliente.getFechaNacimiento());
         txtSeguro.setText(cliente.getNumeroSeguro());
         txtTlfEMergencia.setText(cliente.getTelefonoUrgencia());
-        //falta la lista de especialidades que se ve en el list view
+        lvEspecialidades.getItems().setAll(cliente.getEspecialidades());
+
     }
 
     @javafx.fxml.FXML
