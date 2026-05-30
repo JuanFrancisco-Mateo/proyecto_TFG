@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -12,12 +13,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.image.Image?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" stylesheets="@stylesLogin.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.cifpcarlos3.proyecto.Controladores.LoginControlador">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" stylesheets="@stylesLogin.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.cifpcarlos3.proyecto.Controladores.LoginControlador">
    <left>
       <VBox alignment="CENTER" prefHeight="400.0" prefWidth="306.0">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" preserveRatio="true" >
+            <ImageView fitHeight="150.0" fitWidth="200.0" preserveRatio="true">
                 <image>
                     <Image url="@img/logo.jpg" />
                 </image>
@@ -40,7 +40,7 @@
         </rowConstraints>
          <children>
             <Label fx:id="labelBienvenido" text="BIENVENIDO" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
-            <Label fx:id="labelUser" alignment="CENTER" text="EMAIL: " GridPane.rowIndex="1" />
+            <Label fx:id="labelUser" alignment="CENTER" text="USERNAME:" GridPane.rowIndex="1" />
             <Label text="CONTRASEÑA: " GridPane.rowIndex="2" />
             <TextField fx:id="tfUserName" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>

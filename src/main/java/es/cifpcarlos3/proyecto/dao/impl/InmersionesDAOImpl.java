@@ -32,6 +32,7 @@ public class InmersionesDAOImpl implements InmersionesDAO {
                 if ("BARCO".equals(tipo)) {
                     InmersionBarco ib = new InmersionBarco();
                     ib.setIdInmersion(rdo.getInt("idInmersion"));
+                    ib.setTipo("tipo");
                     ib.setNombre(rdo.getString("nombre"));
                     String certMin = rdo.getString("certificacionMinima");
                     if (certMin != null && !certMin.isEmpty()) {
@@ -45,6 +46,7 @@ public class InmersionesDAOImpl implements InmersionesDAO {
                 } else {
                     InmersionCosta ic = new InmersionCosta();
                     ic.setIdInmersion(rdo.getInt("idInmersion"));
+                    ic.setTipo("tipo");
                     ic.setNombre(rdo.getString("nombre"));
                     String certMin = rdo.getString("certificacionMinima");
                     if (certMin != null && !certMin.isEmpty()) {

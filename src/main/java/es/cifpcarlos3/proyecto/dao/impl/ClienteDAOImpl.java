@@ -28,7 +28,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         if (fechaNac != null) {
             cliente.setFechaNacimiento(fechaNac.toLocalDate());
         }
-        cliente.setTelefono(rdo.getInt("telefono"));
+        cliente.setTelefono(rdo.getString("telefono"));
         cliente.setEmail(rdo.getString("email"));
         cliente.setTelefonoUrgencia(rdo.getString("telefonoUrgencia"));
         String cert = rdo.getString("certificacion");
@@ -121,7 +121,7 @@ public class ClienteDAOImpl implements ClienteDAO {
             stmt.setString(2, cliente.getApellidos());
             stmt.setString(3, cliente.getDni());
             stmt.setDate(4, cliente.getFechaNacimiento() != null ? Date.valueOf(cliente.getFechaNacimiento()) : null);
-            stmt.setInt(5, cliente.getTelefono());
+            stmt.setString(5, cliente.getTelefono());
             stmt.setString(6, cliente.getEmail());
             stmt.setString(7, cliente.getTelefonoUrgencia());
             stmt.setString(8, cliente.getCertificacion() != null ? cliente.getCertificacion().name() : null);
@@ -142,7 +142,7 @@ public class ClienteDAOImpl implements ClienteDAO {
             stmt.setString(2, cliente.getApellidos());
             stmt.setString(3, cliente.getDni());
             stmt.setDate(4, cliente.getFechaNacimiento() != null ? Date.valueOf(cliente.getFechaNacimiento()) : null);
-            stmt.setInt(5, cliente.getTelefono());
+            stmt.setString(5, cliente.getTelefono());
             stmt.setString(6, cliente.getEmail());
             stmt.setString(7, cliente.getTelefonoUrgencia());
             stmt.setString(8, cliente.getCertificacion() != null ? cliente.getCertificacion().name() : null);
@@ -211,5 +211,24 @@ public class ClienteDAOImpl implements ClienteDAO {
             System.err.println("Error al obtener especialidades del cliente: " + e.getMessage());
         }
         return especialidades;
+    }
+
+    @Override
+    public int getIdEspecialidadPorNombre(String nombre) {
+        String sql = "SELECT idEspecialidad FROM especialidades WHERE nombre = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nombre);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idEspecialidad");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error obteniendo id especialidad: " + e.getMessage());
+        }
+        return -1;
     }
 }

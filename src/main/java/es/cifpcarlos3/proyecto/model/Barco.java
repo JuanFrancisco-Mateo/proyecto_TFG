@@ -13,5 +13,8 @@ public class Barco {
     private String nombre;
     private int capacidad;
 
-
+    @Override
+    public String toString(){
+        return nombre + "(máx: "+capacidad+")";
+    }
 }

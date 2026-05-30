@@ -10,14 +10,18 @@ import java.time.LocalDate;
 @Data
 
 
-public class Usuario {
+public class Usuario extends Persona{
     private int idUsuario;
     private String nombre;
     private String apellidos;
     private String email;
-    private String dni;
     private String telefono;
-    private LocalDate fechaNacimiento;
+    private String username;
     private String passwordHash; //Se guarda el hash de la contraseña, no la contraseña real
     private Rol rol;
+
+    @Override
+    public String toString(){
+        return nombre+ " "+ apellidos;
+    }
 }

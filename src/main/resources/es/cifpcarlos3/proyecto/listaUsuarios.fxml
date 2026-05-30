@@ -12,7 +12,6 @@
         <TableView fx:id="tableUsuarios" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="75.0">
             <columns>
                 <TableColumn fx:id="colNombre" prefWidth="75.0" text="Nombre" />
-                <TableColumn fx:id="colDni" prefWidth="75.0" text="DNI" />
                 <TableColumn fx:id="colEmail" prefWidth="75.0" text="Email" />
                 <TableColumn fx:id="colTlf" prefWidth="75.0" text="Teléfono" />
                 <TableColumn fx:id="colRol" prefWidth="75.0" text="Rol" />

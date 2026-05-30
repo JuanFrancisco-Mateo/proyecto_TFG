@@ -205,7 +205,7 @@ public class ReservaDAOImpl implements ReservaDAO {
                     if (fechaNac != null) {
                         cliente.setFechaNacimiento(fechaNac.toLocalDate());
                     }
-                    cliente.setTelefono(rdo.getInt("telefono"));
+                    cliente.setTelefono(rdo.getString("telefono"));
                     cliente.setEmail(rdo.getString("email"));
                     cliente.setTelefonoUrgencia(rdo.getString("telefonoUrgencia"));
                     String cert = rdo.getString("certificacion");

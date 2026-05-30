@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
@@ -14,16 +13,14 @@
         <Line endX="331.0" endY="-3.814697265625E-6" layoutX="249.0" layoutY="33.0" startX="-100.0" />
         <Text layoutX="79.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre:" />
         <Text layoutX="355.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apellidos:" />
-        <Text layoutX="369.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DNI:" />
-        <Text layoutX="74.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha Nac:" />
-        <DatePicker fx:id="txtFecha" layoutX="147.0" layoutY="103.0" prefHeight="25.0" prefWidth="147.0" />
+        <Text layoutX="353.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
         <TextField fx:id="txtNombre" layoutX="147.0" layoutY="55.0" prefHeight="25.0" prefWidth="147.0" />
         <TextField fx:id="txtApellidos" layoutX="420.0" layoutY="56.0" prefHeight="25.0" prefWidth="139.0" />
-        <TextField fx:id="txtDni" layoutX="420.0" layoutY="103.0" prefHeight="25.0" prefWidth="139.0" />
-        <Text layoutX="93.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
-        <TextField fx:id="txtEmail" layoutX="147.0" layoutY="144.0" prefHeight="25.0" prefWidth="147.0" />
-        <Text layoutX="357.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Teléfono:" />
-        <TextField fx:id="txtTlf" layoutX="420.0" layoutY="145.0" prefHeight="25.0" prefWidth="139.0" />
+        <TextField fx:id="txtUsername" layoutX="420.0" layoutY="103.0" prefHeight="25.0" prefWidth="139.0" />
+        <Text layoutX="93.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
+        <TextField fx:id="txtEmail" layoutX="147.0" layoutY="102.0" prefHeight="25.0" prefWidth="147.0" />
+        <Text layoutX="78.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Teléfono:" />
+        <TextField fx:id="txtTlf" layoutX="146.0" layoutY="144.0" prefHeight="25.0" prefWidth="147.0" />
         <Text layoutX="23.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS EMPLEADO" />
         <Line endX="331.0" endY="-3.814697265625E-6" layoutX="253.0" layoutY="196.0" startX="-122.33332824707031" startY="1.52587890625E-5" />
         <Text layoutX="71.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contraseña:" />

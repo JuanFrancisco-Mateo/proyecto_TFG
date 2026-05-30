@@ -1,6 +1,7 @@
 package es.cifpcarlos3.proyecto.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,11 +15,14 @@ import lombok.NoArgsConstructor;
 public class Cliente extends Persona{
     private int idCliente;
     private Certificacion certificacion;
-    private List<Especialidad> especialidades;
+    private List<Especialidad> especialidades = new ArrayList<>();
     private String numeroSeguro;
     private LocalDate seguroHasta;
     private LocalDate fechaExp;
 
-    public void addEspecialidad(Especialidad especialidad){}
-    public void removeEspecialidad(Especialidad especialidad){}
-}
+    @Override
+    public String toString(){
+        return nombre+" "+ apellidos+" - " +dni;
+    }
+
+   }

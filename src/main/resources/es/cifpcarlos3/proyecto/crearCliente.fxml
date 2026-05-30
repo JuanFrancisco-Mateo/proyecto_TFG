@@ -106,7 +106,7 @@
             strokeType="OUTSIDE"
             strokeWidth="0.0"
             text="Certificado:" />
-      <TextField fx:id="txtCertificado"
+      <ComboBox fx:id="cbCertificado"
                  layoutX="84.0"
                  layoutY="213.0"
                  prefHeight="25.0"

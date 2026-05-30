@@ -14,8 +14,7 @@ public abstract class Persona {
     protected String apellidos;
     protected String dni;
     protected LocalDate fechaNacimiento;
-    protected int telefono;
+    protected String telefono;
     protected String email;
     protected String telefonoUrgencia;
-
 }

@@ -16,4 +16,5 @@ public interface ClienteDAO {
     void addEspecialidad(int idCliente, int idEspecialidad);
     void removeEspecialidad(int idCliente, int idEspecialidad);
     List<Especialidad> getEspecialidades(int idCliente);
+    int getIdEspecialidadPorNombre(String nombre);
 }
