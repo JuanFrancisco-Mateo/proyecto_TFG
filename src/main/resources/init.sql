@@ -9,6 +9,7 @@ USE centro_buceo;
 CREATE TABLE IF NOT EXISTS usuario (
     idUsuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     telefono VARCHAR(20),
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -126,15 +127,15 @@ CREATE TABLE IF NOT EXISTS instructor_especialidad (
 -- ============================================
 
 -- Especialidades
-INSERT INTO especialidades (nombre) VALUES ('PROFUNDO'), ('APNEA'), ('CORRIENTES'), ('PECIOS'), ('CUEVAS');
+INSERT IGNORE INTO especialidades (nombre) VALUES ('PROFUNDO'), ('APNEA'), ('CORRIENTES'), ('PECIOS'), ('CUEVAS');
 
 -- Usuarios (contraseñas en Base64: "admin123" -> YWRtaW4xMjM=, "recepcion" -> cmVjZXBjaW9u)
-INSERT INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES
+INSERT IGNORE INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES
 ('Administrador Principal', 'admin@centrobuceo.com', '600111222', 'admin', 'YWRtaW4xMjM=', 'ADMINISTRADOR'),
 ('María López', 'maria@centrobuceo.com', '600333444', 'maria', 'bWFyaWExMjM=', 'EMPLEADO');
 
 -- Clientes
-INSERT INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta) VALUES
+INSERT IGNORE INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta) VALUES
 ('Carlos', 'García Ruiz', '12345678A', '1990-05-15', 600111333, 'carlos@email.com', '600111334', 'OWD', 'SEGURO001', '2026-12-31'),
 ('Ana', 'Martínez López', '87654321B', '1985-08-22', 600222444, 'ana@email.com', '600222445', 'AOWD', 'SEGURO002', '2026-12-31'),
 ('Pedro', 'Sánchez Gómez', '11111111C', '1995-02-10', 600333555, 'pedro@email.com', '600333556', 'RESCUE', 'SEGURO003', '2026-12-31'),
@@ -142,29 +143,29 @@ INSERT INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, 
 ('Javier', 'Rodríguez Pérez', '33333333E', '1988-07-05', 600555777, 'javier@email.com', '600555778', 'MASTERSCUBA', 'SEGURO005', '2026-12-31');
 
 -- Instructores
-INSERT INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion) VALUES
+INSERT IGNORE INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion) VALUES
 ('Roberto', 'Díaz Martín', '44444444F', '1980-03-20', 600666888, 'roberto@centrobuceo.com', '600666889', 'OWSI'),
 ('Elena', 'Torres Ruiz', '55555555G', '1985-09-12', 600777999, 'elena@centrobuceo.com', '600777990', 'DIVEMASTER');
 
 -- Barcos
-INSERT INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8);
+INSERT IGNORE INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8);
 
 -- Inmersiones (BARCO)
-INSERT INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
+INSERT IGNORE INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
 ('Bautismo en Barco', 'SCUBA', 10, 45.00, 30, 'BARCO'),
 ('Inmersión Arrecife', 'OWD', 8, 55.00, 45, 'BARCO');
-INSERT INTO inmersion_barco (idInmersion, idBarco) VALUES (1, 1), (2, 2);
+INSERT IGNORE INTO inmersion_barco (idInmersion, idBarco) VALUES (1, 1), (2, 2);
 
 -- Inmersiones (COSTA)
-INSERT INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
+INSERT IGNORE INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
 ('Calas Escondidas', 'SCUBA', 6, 35.00, 60, 'COSTA'),
 ('Fondo Marino', 'AOWD', 4, 40.00, 50, 'COSTA');
-INSERT INTO inmersion_costa (idInmersion, lugar) VALUES (3, 'Cala del Bosque'), (4, 'Playa del Faro');
+INSERT IGNORE INTO inmersion_costa (idInmersion, lugar) VALUES (3, 'Cala del Bosque'), (4, 'Playa del Faro');
 
 -- Reservas (ejemplos)
-INSERT INTO reservas (idInmersion, fecha, hora, idInstructor) VALUES
+INSERT IGNORE INTO reservas (idInmersion, fecha, hora, idInstructor) VALUES
 (1, CURDATE() + INTERVAL 1 DAY, '10:00:00', 1),
 (2, CURDATE() + INTERVAL 2 DAY, '15:00:00', 2);
 
 -- Clientes en reservas
-INSERT INTO reserva_clientes (idReserva, idCliente) VALUES (1, 1), (1, 2), (2, 3);
+INSERT IGNORE INTO reserva_clientes (idReserva, idCliente) VALUES (1, 1), (1, 2), (2, 3);
