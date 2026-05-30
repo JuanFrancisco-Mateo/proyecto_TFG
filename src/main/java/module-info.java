@@ -9,6 +9,7 @@ module es.cifpcarlos3.proyecto {
 
 
     opens es.cifpcarlos3.proyecto to javafx.fxml;
+    opens es.cifpcarlos3.proyecto.model to javafx.base;
     exports es.cifpcarlos3.proyecto;
     exports es.cifpcarlos3.proyecto.Controladores;
     opens es.cifpcarlos3.proyecto.Controladores to javafx.fxml;
