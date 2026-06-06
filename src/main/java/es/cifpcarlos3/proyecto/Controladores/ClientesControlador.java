@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ClientesControlador {
 
@@ -44,8 +45,6 @@ public class ClientesControlador {
     @javafx.fxml.FXML
     private TextField txtCertificado;
     @javafx.fxml.FXML
-    private RadioButton btnPresentado;
-    @javafx.fxml.FXML
     private DatePicker txtFecha;
     @javafx.fxml.FXML
     private TextField txtTlf;
@@ -57,6 +56,10 @@ public class ClientesControlador {
     private ComboBox<Especialidad> cbEspecialidad;
     @javafx.fxml.FXML
     private TextField txtTlfEMergencia;
+    @FXML
+    private Button btnDeleteEspecialidad;
+    @FXML
+    private Button btnEliminar;
 
     Cliente cliente;
     private ClienteDAO clienteDAO;
@@ -80,6 +83,8 @@ public class ClientesControlador {
         txtNombre.setText(cliente.getNombre());
         txtTlf.setText(cliente.getTelefono());
         txtFecha.setValue(cliente.getFechaNacimiento());
+        txtFechaCertificado.setValue(cliente.getFechaExp());
+        txtFechaValidez.setValue(cliente.getSeguroHasta());
         txtSeguro.setText(cliente.getNumeroSeguro());
         txtTlfEMergencia.setText(cliente.getTelefonoUrgencia());
         if (lvEspecialidades != null) {
@@ -146,6 +151,37 @@ public class ClientesControlador {
                 log.warn("Error al modificar cliente: teléfono incorrecto");
             }
 
+    }
+
+    @FXML
+    public void deleteEspecialidad(ActionEvent actionEvent) {
+        Especialidad especialidad = lvEspecialidades.getSelectionModel().getSelectedItem();
+        int idEsp = clienteDAO.getIdEspecialidadPorNombre(especialidad.name());
+        clienteDAO.removeEspecialidad(cliente.getIdCliente(), idEsp);
+    }
+
+    @FXML
+    public void deleteCliente(ActionEvent actionEvent) {
+        Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+        alerta.setTitle("Eliminar Cliente");
+        alerta.setHeaderText("Confirmación");
+        alerta.setContentText("¿Está seguro de que quiere eliminar al cliente?");
+
+        //Para coger lo seleccionado por el usuario
+        Optional<ButtonType> resultado = alerta.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            clienteDAO.eliminarCliente(cliente.getIdCliente());
+            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+            ok.setContentText("Cliente eliminado correctamente");
+            ok.showAndWait();
+            //se cierra la ventana
+            btnEliminar.getScene().getWindow().hide();
+        }else{
+            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+            ok.setContentText("No se pudo eliminar el cliente");
+            ok.showAndWait();
+        }
     }
 
 /*
