@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CrearClienteControlador {
@@ -18,8 +19,6 @@ public class CrearClienteControlador {
     private ListView<Especialidad> lvEspecialidades;
     @javafx.fxml.FXML
     private TextField txtApellidos;
-    @javafx.fxml.FXML
-    private Button btnAddEspecialidad;
     @javafx.fxml.FXML
     private TextField txtEmail;
     @javafx.fxml.FXML
@@ -46,6 +45,10 @@ public class CrearClienteControlador {
     private ComboBox<Especialidad> cbEspecialidades;
     @javafx.fxml.FXML
     private TextField txtTlfEmergencia;
+    @javafx.fxml.FXML
+    private Button btnDeleteEspecialidad;
+    @javafx.fxml.FXML
+    private Button btnAddEspecialidad;
 
     private ClienteDAO clienteDAO;
     private DatabaseConnection db;
@@ -67,7 +70,6 @@ public class CrearClienteControlador {
             //Para que no haya duplicados
             if(!lvEspecialidades.getItems().contains(especialidad)){
                 lvEspecialidades.getItems().add(especialidad);
-
             }
         }
     }
@@ -109,8 +111,26 @@ public class CrearClienteControlador {
                cliente.setEspecialidades(
                        new ArrayList<>(lvEspecialidades.getItems())
                );
-               clienteDAO.crearCliente(cliente);
-               log.info("Se ha creado un nuevo cliente");
+               try{
+                   clienteDAO.crearCliente(cliente);
+                   log.info("Se ha creado un nuevo cliente");
+
+                   //se cierra la ventana
+                   btnGuardarCliente.getScene().getWindow().hide();
+               }catch (SQLException e){
+                   Alert alerta = new Alert(Alert.AlertType.ERROR);
+                   alerta.setTitle("Error");
+                   alerta.setHeaderText("No se pudo crear el cliente");
+
+                   if (e.getMessage().contains("dni")) {
+                       alerta.setContentText("Ya existe un cliente con ese DNI");
+                   } else {
+                       alerta.setContentText(e.getMessage());
+                   }
+
+                   alerta.showAndWait();
+               }
+
            }catch (NumberFormatException e){
                Alert alerta = new Alert(Alert.AlertType.ERROR);
                alerta.setTitle("Formato incorrecto");
@@ -121,5 +141,13 @@ public class CrearClienteControlador {
            }
         }
 
+    }
+
+    @javafx.fxml.FXML
+    public void deleteEspecialidad(ActionEvent actionEvent) {
+        Especialidad especialidad = lvEspecialidades.getSelectionModel().getSelectedItem();
+        if(especialidad != null){
+            lvEspecialidades.getItems().remove(especialidad);
+        }
     }
 }
