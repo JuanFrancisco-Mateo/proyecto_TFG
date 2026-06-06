@@ -40,6 +40,7 @@ public class ClienteDAOImpl implements ClienteDAO {
         if (seguroHasta != null) {
             cliente.setSeguroHasta(seguroHasta.toLocalDate());
         }
+        cliente.setEspecialidades(getEspecialidades(cliente.getIdCliente()));
         return cliente;
     }
 
@@ -77,20 +78,21 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
-    public Cliente buscarPorDni(String dni) {
-        String consulta = "SELECT * FROM clientes WHERE dni = ?";
+    public List<Cliente> buscarPorDni(String dni) {
+        List<Cliente> lista = new ArrayList<>();
+        String consulta = "SELECT * FROM clientes WHERE dni LIKE ?";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(consulta)) {
-            stmt.setString(1, dni);
+            stmt.setString(1,"%" + dni +"%");
             try (ResultSet rdo = stmt.executeQuery()) {
                 if (rdo.next()) {
-                    return mapearCliente(rdo);
+                   lista.add(mapearCliente(rdo));
                 }
             }
         } catch (SQLException e) {
             System.err.println("Error al buscar cliente por DNI: " + e.getMessage());
         }
-        return null;
+        return lista;
     }
 
     @Override
@@ -113,10 +115,10 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
-    public void crearCliente(Cliente cliente) {
-        String consulta = "INSERT INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void crearCliente(Cliente cliente) throws SQLException{
+        String consulta = "INSERT INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta, fechaExp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = db.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(consulta)) {
+             PreparedStatement stmt = conn.prepareStatement(consulta,Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, cliente.getNombre());
             stmt.setString(2, cliente.getApellidos());
             stmt.setString(3, cliente.getDni());
@@ -127,9 +129,21 @@ public class ClienteDAOImpl implements ClienteDAO {
             stmt.setString(8, cliente.getCertificacion() != null ? cliente.getCertificacion().name() : null);
             stmt.setString(9, cliente.getNumeroSeguro());
             stmt.setDate(10, cliente.getSeguroHasta() != null ? Date.valueOf(cliente.getSeguroHasta()) : null);
+            stmt.setDate(11,  cliente.getFechaExp() != null ? Date.valueOf(cliente.getFechaExp()) : null);
             stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+
+            if(rs.next()){
+                int idCliente = rs.getInt(1);
+                for(Especialidad esp : cliente.getEspecialidades()){
+                    int idEspecialidad = getIdEspecialidadPorNombre(esp.name());
+                    addEspecialidad(idCliente, idEspecialidad);
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error al crear cliente: " + e.getMessage());
+            throw e;
         }
     }
 
