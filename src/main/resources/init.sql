@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS usuario (
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     telefono VARCHAR(20),
+    dni VARCHAR(200) NOT NULL UNIQUE,
+    fechaNacimiento DATE,
     username VARCHAR(50) NOT NULL UNIQUE,
     passwordHash VARCHAR(255) NOT NULL,
     rol VARCHAR(20) NOT NULL CHECK (rol IN ('EMPLEADO', 'ADMINISTRADOR'))
@@ -29,7 +31,8 @@ CREATE TABLE IF NOT EXISTS clientes (
     telefonoUrgencia VARCHAR(20),
     certificacion VARCHAR(30),
     numeroSeguro VARCHAR(50),
-    seguroHasta DATE
+    seguroHasta DATE,
+    fechaExp DATE
 );
 
 -- TABLA: instructores
@@ -64,19 +67,19 @@ CREATE TABLE IF NOT EXISTS inmersion (
 );
 
 -- TABLA: inmersion_barco (hereda de inmersion)
-CREATE TABLE IF NOT EXISTS inmersion_barco (
-    idInmersion INT PRIMARY KEY,
-    idBarco INT NOT NULL,
-    FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE,
-    FOREIGN KEY (idBarco) REFERENCES barcos(idBarco) ON DELETE CASCADE
-);
+--CREATE TABLE IF NOT EXISTS inmersion_barco (
+--    idInmersion INT PRIMARY KEY,
+--    idBarco INT NOT NULL,
+--    FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE,
+--    FOREIGN KEY (idBarco) REFERENCES barcos(idBarco) ON DELETE CASCADE
+--);
 
 -- TABLA: inmersion_costa (hereda de inmersion)
-CREATE TABLE IF NOT EXISTS inmersion_costa (
-    idInmersion INT PRIMARY KEY,
-    lugar VARCHAR(200) NOT NULL,
-    FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE
-);
+--CREATE TABLE IF NOT EXISTS inmersion_costa (
+--  idInmersion INT PRIMARY KEY,
+--  lugar VARCHAR(200) NOT NULL,
+--  FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE
+--);
 
 -- TABLA: especialidades
 CREATE TABLE IF NOT EXISTS especialidades (
@@ -91,8 +94,12 @@ CREATE TABLE IF NOT EXISTS reservas (
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     idInstructor INT,
+    idBarco INT,
+    lugar VARCHAR(200),
+    UNIQUE (idInmersion, fecha, hora, idInstructor),
     FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE,
-    FOREIGN KEY (idInstructor) REFERENCES instructores(idInstructor) ON DELETE SET NULL
+    FOREIGN KEY (idInstructor) REFERENCES instructores(idInstructor) ON DELETE SET NULL,
+    FOREIGN KEY (idBarco) REFERENCES barcos(idBarco) ON DELETE SET NULL
 );
 
 -- TABLA: reserva_clientes (relación N:M entre reservas y clientes)
@@ -130,17 +137,17 @@ CREATE TABLE IF NOT EXISTS instructor_especialidad (
 INSERT IGNORE INTO especialidades (nombre) VALUES ('PROFUNDO'), ('APNEA'), ('CORRIENTES'), ('PECIOS'), ('CUEVAS');
 
 -- Usuarios (contraseñas en Base64: "admin123" -> YWRtaW4xMjM=, "recepcion" -> cmVjZXBjaW9u)
-INSERT IGNORE INTO usuario (nombre, email, telefono, username, passwordHash, rol) VALUES
-('Administrador Principal', 'admin@centrobuceo.com', '600111222', 'admin', 'YWRtaW4xMjM=', 'ADMINISTRADOR'),
-('María López', 'maria@centrobuceo.com', '600333444', 'maria', 'bWFyaWExMjM=', 'EMPLEADO');
+INSERT IGNORE INTO usuario (nombre, apellidos, email, dni, fechaNacimiento, telefono, username, passwordHash, rol) VALUES
+('Administrador Principal','', 'admin@centrobuceo.com', '16923451F', '1990-03-20', '600111222', 'admin', 'YWRtaW4xMjM=', 'ADMINISTRADOR'),
+('María', 'López', 'maria@centrobuceo.com', '98978956F', '1980-03-20','600333444', 'maria', 'bWFyaWExMjM=', 'EMPLEADO');
 
 -- Clientes
-INSERT IGNORE INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta) VALUES
-('Carlos', 'García Ruiz', '12345678A', '1990-05-15', 600111333, 'carlos@email.com', '600111334', 'OWD', 'SEGURO001', '2026-12-31'),
-('Ana', 'Martínez López', '87654321B', '1985-08-22', 600222444, 'ana@email.com', '600222445', 'AOWD', 'SEGURO002', '2026-12-31'),
-('Pedro', 'Sánchez Gómez', '11111111C', '1995-02-10', 600333555, 'pedro@email.com', '600333556', 'RESCUE', 'SEGURO003', '2026-12-31'),
-('Laura', 'Fernández Díaz', '22222222D', '2000-11-30', 600444666, 'laura@email.com', '600444667', 'SCUBA', 'SEGURO004', '2026-12-31'),
-('Javier', 'Rodríguez Pérez', '33333333E', '1988-07-05', 600555777, 'javier@email.com', '600555778', 'MASTERSCUBA', 'SEGURO005', '2026-12-31');
+INSERT IGNORE INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta, fechaExp) VALUES
+('Carlos', 'García Ruiz', '12345678A', '1990-05-15', 600111333, 'carlos@email.com', '600111334', 'OWD', 'SEGURO001', '2026-12-31', '2025-12-31'),
+('Ana', 'Martínez López', '87654321B', '1985-08-22', 600222444, 'ana@email.com', '600222445', 'AOWD', 'SEGURO002', '2026-12-31', '2025-12-31'),
+('Pedro', 'Sánchez Gómez', '11111111C', '1995-02-10', 600333555, 'pedro@email.com', '600333556', 'RESCUE', 'SEGURO003', '2026-12-31', '2025-12-31'),
+('Laura', 'Fernández Díaz', '22222222D', '2000-11-30', 600444666, 'laura@email.com', '600444667', 'SCUBA', 'SEGURO004', '2026-12-31', '2025-12-31'),
+('Javier', 'Rodríguez Pérez', '33333333E', '1988-07-05', 600555777, 'javier@email.com', '600555778', 'MASTERSCUBA', 'SEGURO005', '2026-12-31', '2025-12-31');
 
 -- Instructores
 INSERT IGNORE INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion) VALUES
@@ -148,7 +155,7 @@ INSERT IGNORE INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefo
 ('Elena', 'Torres Ruiz', '55555555G', '1985-09-12', 600777999, 'elena@centrobuceo.com', '600777990', 'DIVEMASTER');
 
 -- Barcos
-INSERT IGNORE INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8);
+INSERT IGNORE INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8), ('Poseidón I', 10);
 
 -- Inmersiones (BARCO)
 INSERT IGNORE INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
