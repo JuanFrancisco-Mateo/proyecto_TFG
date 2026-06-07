@@ -7,12 +7,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public abstract class Inmersion {
-    protected int idInmersion;
-    protected String nombre;
-    protected String tipo;
-    protected Certificacion certificacionMinima;
-    protected int plazasMax;
-    protected double precio;
-    protected int duracionMin;
+public class Inmersion {
+    private int idInmersion;
+    private String nombre;
+    private String tipo;
+    private Certificacion certificacionMinima;
+    private int plazasMax;
+    private double precio;
+    private int duracionMin;
+    private String lugar;
+
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

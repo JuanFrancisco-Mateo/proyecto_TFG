@@ -7,6 +7,8 @@ import es.cifpcarlos3.proyecto.util.DatabaseConnection;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BarcoDAOImpl implements BarcoDAO {
     private final DatabaseConnection db;
@@ -15,13 +17,14 @@ public class BarcoDAOImpl implements BarcoDAO {
     }
 
     @Override
-    public Barco devolverBarcoDisponible(LocalDate fecha, LocalTime hora) {
+    public List<Barco> devolverBarcoDisponible(LocalDate fecha, LocalTime hora) {
+
+        List<Barco> barcos = new ArrayList<>();
+
         // Buscar un barco que no tenga inmersiones programadas en esa fecha/hora
         String consulta = "SELECT b.* FROM barcos b WHERE b.idBarco NOT IN (" +
-                          "SELECT ib.idBarco FROM inmersion_barco ib " +
-                          "JOIN inmersion i ON ib.idInmersion = i.idInmersion " +
-                          "JOIN reservas r ON r.idInmersion = i.idInmersion " +
-                          "WHERE r.fecha = ? AND r.hora = ?) LIMIT 1";
+                          "SELECT r.idBarco FROM reservas r "+
+                          "WHERE r.fecha = ? AND r.hora = ? AND r.idBarco IS NOT NULL)";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(consulta)) {
             stmt.setDate(1, Date.valueOf(fecha));
@@ -32,12 +35,12 @@ public class BarcoDAOImpl implements BarcoDAO {
                     b.setIdBarco(rdo.getInt("idBarco"));
                     b.setNombre(rdo.getString("nombre"));
                     b.setCapacidad(rdo.getInt("capacidad"));
-                    return b;
+                    barcos.add(b);
                 }
             }
         } catch (SQLException e) {
             System.err.println("Error al buscar barco disponible: " + e.getMessage());
         }
-        return null;
+        return barcos;
     }
 }

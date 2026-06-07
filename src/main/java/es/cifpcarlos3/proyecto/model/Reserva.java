@@ -19,4 +19,11 @@ public class Reserva {
     private LocalTime hora;
     private Instructor instructor;
     private List<Cliente> clientes;
+    private Barco barco;
+    private String lugar;
+
+    @Override
+    public String toString() {
+        return inmersion.toString();
+    }
 }

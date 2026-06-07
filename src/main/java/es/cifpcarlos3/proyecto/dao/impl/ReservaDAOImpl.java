@@ -22,9 +22,11 @@ public class ReservaDAOImpl implements ReservaDAO {
         reserva.setId(rdo.getInt("idReserva"));
 
         // Mapear inmersión (datos básicos)
-        int idInmersion = rdo.getInt("idInmersion");
-        String tipo = rdo.getString("tipo");
-        Inmersion inmersion;
+        Inmersion inmersion= new Inmersion();
+        inmersion.setIdInmersion(rdo.getInt("idInmersion"));
+        inmersion.setTipo(rdo.getString("tipo"));
+        //inmersion.setLugar(rdo.getString("lugar"));
+        /*
         if ("BARCO".equals(tipo)) {
             InmersionBarco ib = new InmersionBarco();
             ib.setIdInmersion(idInmersion);
@@ -35,7 +37,7 @@ public class ReservaDAOImpl implements ReservaDAO {
             ic.setIdInmersion(idInmersion);
             ic.setLugar(rdo.getString("lugar") != null ? rdo.getString("lugar") : "");
             inmersion = ic;
-        }
+        }*/
         inmersion.setNombre(rdo.getString("nombre"));
         String certMin = rdo.getString("certificacionMinima");
         if (certMin != null && !certMin.isEmpty()) {
@@ -103,7 +105,7 @@ public class ReservaDAOImpl implements ReservaDAO {
 
     @Override
     public int crearReserva(Reserva reserva) {
-        String consulta = "INSERT INTO reservas (idInmersion, fecha, hora, idInstructor) VALUES (?, ?, ?, ?)";
+        String consulta = "INSERT INTO reservas (idInmersion, fecha, hora, idInstructor, idBarco) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(consulta, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, reserva.getInmersion().getIdInmersion());
@@ -114,6 +116,10 @@ public class ReservaDAOImpl implements ReservaDAO {
             } else {
                 stmt.setNull(4, Types.INTEGER);
             }
+            if (reserva.getBarco() != null)
+                stmt.setInt(5, reserva.getBarco().getIdBarco());
+            else
+                stmt.setNull(5, Types.INTEGER);
             stmt.executeUpdate();
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {

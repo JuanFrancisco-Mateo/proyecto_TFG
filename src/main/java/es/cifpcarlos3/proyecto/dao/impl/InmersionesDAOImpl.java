@@ -19,6 +19,36 @@ public class InmersionesDAOImpl implements InmersionesDAO {
     @Override
     public List<Inmersion> listarInmersiones() {
         List<Inmersion> inmersiones = new ArrayList<>();
+        String consulta = "SELECT * FROM inmersion ";
+
+        try (var conexion = db.getConnection();
+             Statement sentencia = conexion.createStatement();
+             ResultSet rdo = sentencia.executeQuery(consulta)) {
+            while(rdo.next()){
+                Inmersion i = new Inmersion();
+                i.setIdInmersion(rdo.getInt("idInmersion"));
+                i.setTipo(rdo.getString("tipo"));
+                i.setNombre(rdo.getString("nombre"));
+                String certMin = rdo.getString("certificacionMinima");
+                if (certMin != null && !certMin.isEmpty()) {
+                    i.setCertificacionMinima(Certificacion.valueOf(certMin));
+                }
+                i.setPlazasMax(rdo.getInt("plazasMax"));
+                i.setPrecio(rdo.getDouble("precio"));
+                i.setDuracionMin(rdo.getInt("duracionMin"));
+               // i.setLugar(rdo.getString("lugar") != null ? rdo.getString("lugar") : "");
+                inmersiones.add(i);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener la lista de inmersiones: " + e.getMessage());
+        }
+        return inmersiones;
+    }
+    /*
+    @Override
+    public List<Inmersion> listarInmersiones() {
+        List<Inmersion> inmersiones = new ArrayList<>();
         String consulta = "SELECT i.*, ib.idBarco, ic.lugar FROM inmersion i " +
                           "LEFT JOIN inmersion_barco ib ON i.idInmersion = ib.idInmersion " +
                           "LEFT JOIN inmersion_costa ic ON i.idInmersion = ic.idInmersion";
@@ -67,5 +97,7 @@ public class InmersionesDAOImpl implements InmersionesDAO {
 
         return inmersiones;
     }
+
+     */
 }
 

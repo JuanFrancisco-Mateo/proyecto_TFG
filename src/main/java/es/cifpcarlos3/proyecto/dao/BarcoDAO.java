@@ -4,7 +4,8 @@ import es.cifpcarlos3.proyecto.model.Barco;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public interface BarcoDAO {
-    Barco devolverBarcoDisponible(LocalDate fecha, LocalTime hora);
+    List<Barco> devolverBarcoDisponible(LocalDate fecha, LocalTime hora);
 }
