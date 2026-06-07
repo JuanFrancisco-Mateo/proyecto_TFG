@@ -51,22 +51,21 @@ CREATE TABLE IF NOT EXISTS instructores (
 -- TABLA: barcos
 CREATE TABLE IF NOT EXISTS barcos (
     idBarco INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
     capacidad INT NOT NULL
 );
 
 -- TABLA: inmersion (tabla padre)
 CREATE TABLE IF NOT EXISTS inmersion (
     idInmersion INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
     certificacionMinima VARCHAR(30),
     plazasMax INT NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     duracionMin INT,
     lugar VARCHAR(200),
-    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('BARCO', 'COSTA')),
-    UNIQUE (idInmersion, nombre, tipo, lugar, plazasMax, precio, duracionMin, certificacionMinima)
-);
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('BARCO', 'COSTA'))
+    );
 
 -- TABLA: inmersion_barco (hereda de inmersion)
 --CREATE TABLE IF NOT EXISTS inmersion_barco (
