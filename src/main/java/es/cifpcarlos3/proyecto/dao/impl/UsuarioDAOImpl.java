@@ -30,15 +30,15 @@ public class UsuarioDAOImpl implements UsuarioDAO {
                 if (!rdo.next()) {
                     return null;
                 } else {
-                    String nombre = rdo.getString("nombre");
-                    String apellidos = rdo.getString("apellidos");
-                    Rol rol = Rol.valueOf(rdo.getString("rol"));
-                    int id = rdo.getInt("idUsuario");
-                    String email = rdo.getString("email");
-                    String tlf = rdo.getString("telefono");
-                    String username = rdo.getString("username");
-                    String password = rdo.getString("passwordHash");
-                    Usuario usuario = new Usuario(id, nombre,apellidos, email, tlf, username, password, rol);
+                    Usuario usuario = new Usuario();
+                    usuario.setNombre(rdo.getString("nombre"));
+                    usuario.setApellidos(rdo.getString("apellidos"));
+                    usuario.setRol(Rol.valueOf(rdo.getString("rol")));
+                    usuario.setIdUsuario(rdo.getInt("idUsuario"));
+                    usuario.setEmail(rdo.getString("email"));
+                    usuario.setTelefono(rdo.getString("telefono"));
+                    usuario.setUsername(rdo.getString("username"));
+                    usuario.setPasswordHash(rdo.getString("passwordHash"));
                     return usuario;
                 }
             }
@@ -137,6 +137,11 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         usuario.setUsername(rdo.getString("username"));
         usuario.setPasswordHash(rdo.getString("passwordHash"));
         usuario.setRol(Rol.valueOf(rdo.getString("rol")));
+        usuario.setDni(rdo.getString("dni"));
+        Date fechaNac = rdo.getDate("fechaNacimiento");
+        if(fechaNac!=null){
+            usuario.setFechaNacimiento(fechaNac.toLocalDate());
+        }
         return usuario;
     }
 
