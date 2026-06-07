@@ -48,8 +48,8 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         }
     }
     @Override
-    public void crearUsuario(String nombre, String apellidos, String email, String tlf, String userName, String passwordHash, Rol rol){
-        final String consulta = "INSERT INTO usuario (nombre, apellidos, email, telefono, username, passwordHash, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public void crearUsuario(String nombre, String apellidos, String email, String tlf, String userName, String passwordHash, Rol rol, String dni, LocalDate fechaNac) throws SQLException{
+        final String consulta = "INSERT INTO usuario (nombre, apellidos, email, telefono, username, passwordHash, rol, dni, fechaNacimiento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try(var conexion  = db.getConnection();
             var sentencia = conexion.prepareStatement(consulta) ){
@@ -61,10 +61,13 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             sentencia.setString(5, userName);
             sentencia.setString(6, passwordHash);
             sentencia.setString(7, rol.toString());
+            sentencia.setString(8, dni);
+            sentencia.setDate(9, fechaNac!= null ? Date.valueOf(fechaNac) : null);
             sentencia.executeUpdate();
 
         }catch (SQLException e){
             System.err.println("Error al añadir el cliente: " + e.getMessage());
+            throw e;
         }
     }
     @Override

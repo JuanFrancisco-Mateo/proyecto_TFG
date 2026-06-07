@@ -81,7 +81,7 @@ public class LoginControlador {
                 alerta.showAndWait();
             }
         }
-        /*
+/*
         if ("email@prueba.com".equals(user) && "prueba".equals(pass)) {
 
             Usuario usuarioFalso = new Usuario();
@@ -106,9 +106,7 @@ public class LoginControlador {
             return;
         }
 
- */
-
-        }
+*/     }
 
     public void ventanaInicio(Stage ventana){
         try {
