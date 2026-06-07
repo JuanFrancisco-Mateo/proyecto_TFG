@@ -31,6 +31,8 @@ public class UsuarioControlador {
     private ComboBox<Rol> cbRol;
     @javafx.fxml.FXML
     private Button btnDeleteUser;
+    @javafx.fxml.FXML
+    private TextField txtUsername;
 
     Usuario usuario;
     private UsuarioDAO usuarioDAO;
@@ -49,6 +51,7 @@ public class UsuarioControlador {
         txtFecha.setDisable(true);
         txtDni.setDisable(true);
         txtTlf.setDisable(true);
+        txtUsername.setDisable(true);
     }
 
     public void setUsuario(Usuario usuario){
@@ -61,6 +64,7 @@ public class UsuarioControlador {
         txtEmail.setText(usuario.getEmail());
         txtTlf.setText(usuario.getTelefono());
         txtFecha.setValue(usuario.getFechaNacimiento());
+        txtUsername.setText(usuario.getUsername());
         cbRol.setValue(usuario.getRol());
     }
 
