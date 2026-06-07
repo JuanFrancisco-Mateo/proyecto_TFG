@@ -17,4 +17,8 @@ public abstract class Persona {
     protected String telefono;
     protected String email;
     protected String telefonoUrgencia;
+
+    public String getNombreCompleto(){
+        return nombre+" "+apellidos;
+    }
 }
