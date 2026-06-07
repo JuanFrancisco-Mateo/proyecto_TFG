@@ -34,21 +34,24 @@
             </font>
         </Text>
         <Line endX="475.0" layoutX="211.0" layoutY="256.0" startX="-100.0" />
-        <ListView fx:id="lvClientes" layoutX="141.0" layoutY="298.0" prefHeight="157.0" prefWidth="368.0" />
-        <ComboBox fx:id="cbInstructor" layoutX="345.0" layoutY="208.0" prefWidth="150.0" />
-        <ComboBox fx:id="cbBarco" layoutX="96.0" layoutY="165.0" prefHeight="25.0" prefWidth="156.0" />
-        <ComboBox fx:id="cbHora" layoutX="337.0" layoutY="120.0" prefHeight="25.0" prefWidth="108.0" />
-        <Button fx:id="btnAddCliente" layoutX="314.0" layoutY="461.0" mnemonicParsing="false" onAction="#addCliente" text="Añadir cliente" />
-        <Button fx:id="btnModificar" layoutX="566.0" layoutY="463.0" mnemonicParsing="false" onAction="#modifReserva" text="Modificar" />
+        <ListView fx:id="lvClientes" layoutX="141.0" layoutY="318.0" prefHeight="157.0" prefWidth="368.0" />
+        <ComboBox fx:id="cbInstructor" layoutX="91.0" layoutY="221.0" prefWidth="150.0" />
+        <ComboBox fx:id="cbBarco" layoutX="91.0" layoutY="173.0" prefHeight="25.0" prefWidth="156.0" />
+        <ComboBox fx:id="cbHora" layoutX="314.0" layoutY="124.0" prefHeight="25.0" prefWidth="108.0" />
+        <Button fx:id="btnAddCliente" layoutX="314.0" layoutY="496.0" mnemonicParsing="false" onAction="#addCliente" text="Añadir cliente" />
+        <Button fx:id="btnModificar" layoutX="595.0" layoutY="8.0" mnemonicParsing="false" onAction="#modifReserva" text="Modificar" />
         <Text layoutX="266.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Especialidad: " />
-        <ComboBox fx:id="cbEspecialidad" layoutX="337.0" layoutY="64.0" prefHeight="25.0" prefWidth="141.0" />
-        <Text layoutX="174.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Precio: " />
-        <TextField fx:id="tfPrecio" layoutX="214.0" layoutY="208.0" prefHeight="25.0" prefWidth="64.0" />
-        <ComboBox fx:id="cbClientes" layoutX="359.0" layoutY="267.0" prefWidth="150.0" />
-        <Button fx:id="btnCrearCliente" layoutX="529.0" layoutY="267.0" mnemonicParsing="false" onAction="#irCrearCliente" text="Crear Cliente" />
-        <Text layoutX="290.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lugar:" />
-        <TextField fx:id="txtLugar" layoutX="337.0" layoutY="165.0" prefHeight="25.0" prefWidth="141.0" />
-      <Button fx:id="btnRemoveCliente" layoutX="408.0" layoutY="461.0" mnemonicParsing="false" onAction="#removeCliente" text="Eliminar Cliente" />
+        <ComboBox fx:id="cbEspecialidad" layoutX="543.0" layoutY="76.0" prefHeight="25.0" prefWidth="141.0" />
+        <Text layoutX="403.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Precio: " />
+        <TextField fx:id="tfPrecio" layoutX="442.0" layoutY="220.0" prefHeight="25.0" prefWidth="64.0" />
+        <ComboBox fx:id="cbClientes" layoutX="401.0" layoutY="289.0" prefWidth="150.0" />
+        <Button fx:id="btnCrearCliente" layoutX="517.0" layoutY="318.0" mnemonicParsing="false" onAction="#irCrearCliente" text="Crear Cliente" />
+        <Text layoutX="274.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lugar:" />
+        <TextField fx:id="txtLugar" layoutX="314.0" layoutY="172.0" prefHeight="25.0" prefWidth="141.0" />
+        <Button fx:id="btnRemoveCliente" layoutX="408.0" layoutY="496.0" mnemonicParsing="false" onAction="#removeCliente" text="Eliminar Cliente" />
+        <Text layoutX="253.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Inmersion:" />
+        <ComboBox fx:id="cbInmersion" layoutX="314.0" layoutY="77.0" prefHeight="25.0" prefWidth="141.0" />
+        <TextField fx:id="txtBuscador" layoutX="260.0" layoutY="289.0" prefHeight="25.0" prefWidth="129.0" promptText="Buscar cliente..."/>
     </children>
    <padding>
       <Insets bottom="10.0" />
