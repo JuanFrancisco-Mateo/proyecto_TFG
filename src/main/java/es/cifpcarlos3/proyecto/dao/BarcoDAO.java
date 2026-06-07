@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface BarcoDAO {
     List<Barco> devolverBarcoDisponible(LocalDate fecha, LocalTime hora);
+    Barco devolverBarco(int idBarco);
+    List<Barco> listarBarcos();
 }

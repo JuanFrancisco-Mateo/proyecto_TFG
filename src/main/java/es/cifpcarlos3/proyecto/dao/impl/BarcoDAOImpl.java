@@ -43,4 +43,45 @@ public class BarcoDAOImpl implements BarcoDAO {
         }
         return barcos;
     }
+
+    @Override
+    public Barco devolverBarco(int idBarco){
+        String consulta = "SELECT * FROM barcos WHERE idBarco = ?";
+        try(Connection conn = db.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(consulta)) {
+            stmt.setInt(1, idBarco);
+            try (ResultSet rdo = stmt.executeQuery()) {
+                if (rdo.next()) {
+                    return mapearBarco(rdo);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener barco: " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public List<Barco> listarBarcos() {
+        List<Barco> lista = new ArrayList<>();
+        String consulta = "SELECT * FROM barcos ORDER BY idBarco";
+        try (Connection conn = db.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rdo = stmt.executeQuery(consulta)) {
+            while (rdo.next()) {
+                lista.add(mapearBarco(rdo));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar barcos: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    private Barco mapearBarco(ResultSet rdo) throws SQLException{
+        Barco barco = new Barco();
+        barco.setIdBarco(rdo.getInt("idBarco"));
+        barco.setCapacidad(rdo.getInt("capacidad"));
+        barco.setNombre(rdo.getString("nombre"));
+        return barco;
+    }
 }
