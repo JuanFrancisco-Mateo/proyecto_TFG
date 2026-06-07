@@ -40,6 +40,10 @@ public class ClienteDAOImpl implements ClienteDAO {
         if (seguroHasta != null) {
             cliente.setSeguroHasta(seguroHasta.toLocalDate());
         }
+        Date fechaExp = rdo.getDate("fechaExp");
+        if(fechaExp!=null){
+            cliente.setFechaExp(fechaExp.toLocalDate());
+        }
         cliente.setEspecialidades(getEspecialidades(cliente.getIdCliente()));
         return cliente;
     }
@@ -85,7 +89,7 @@ public class ClienteDAOImpl implements ClienteDAO {
              PreparedStatement stmt = conn.prepareStatement(consulta)) {
             stmt.setString(1,"%" + dni +"%");
             try (ResultSet rdo = stmt.executeQuery()) {
-                if (rdo.next()) {
+                while (rdo.next()) {
                    lista.add(mapearCliente(rdo));
                 }
             }
