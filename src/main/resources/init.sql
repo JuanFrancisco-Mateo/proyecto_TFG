@@ -63,7 +63,9 @@ CREATE TABLE IF NOT EXISTS inmersion (
     plazasMax INT NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     duracionMin INT,
-    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('BARCO', 'COSTA'))
+    lugar VARCHAR(200),
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('BARCO', 'COSTA')),
+    UNIQUE (idInmersion, nombre, tipo, lugar, plazasMax, precio, duracionMin, certificacionMinima)
 );
 
 -- TABLA: inmersion_barco (hereda de inmersion)
@@ -155,24 +157,28 @@ INSERT IGNORE INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefo
 ('Elena', 'Torres Ruiz', '55555555G', '1985-09-12', 600777999, 'elena@centrobuceo.com', '600777990', 'DIVEMASTER');
 
 -- Barcos
-INSERT IGNORE INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8), ('Poseidón I', 10);
+INSERT IGNORE INTO barcos (nombre, capacidad) VALUES ('Neptuno I', 12), ('Neptuno II', 8), ('Poseidón I', 10), ('Mar Menor', 13);
 
 -- Inmersiones (BARCO)
 INSERT IGNORE INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
 ('Bautismo en Barco', 'SCUBA', 10, 45.00, 30, 'BARCO'),
-('Inmersión Arrecife', 'OWD', 8, 55.00, 45, 'BARCO');
-INSERT IGNORE INTO inmersion_barco (idInmersion, idBarco) VALUES (1, 1), (2, 2);
+('Inmersión Arrecife', 'OWD', 8, 55.00, 45, 'BARCO'),
+('El Naranjito', 'AOWD', 10, 60.00, 50, 'BARCO');
 
 -- Inmersiones (COSTA)
-INSERT IGNORE INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo) VALUES
-('Calas Escondidas', 'SCUBA', 6, 35.00, 60, 'COSTA'),
-('Fondo Marino', 'AOWD', 4, 40.00, 50, 'COSTA');
-INSERT IGNORE INTO inmersion_costa (idInmersion, lugar) VALUES (3, 'Cala del Bosque'), (4, 'Playa del Faro');
+INSERT IGNORE INTO inmersion (nombre, certificacionMinima, plazasMax, precio, duracionMin, tipo, lugar) VALUES
+('Calas Escondidas', 'SCUBA', 6, 35.00, 60, 'COSTA', 'Cala del Bosque'),
+('Fondo Marino', 'AOWD', 4, 40.00, 50, 'COSTA', 'Playa del Faro'),
+('La Llana', 'SCUBA', 8, 30.00, 45, 'COSTA', 'La Llana'),
+('Isla Perdiguera', 'OWD', 6, 42.00, 50, 'COSTA', 'Mar Menor');
 
 -- Reservas (ejemplos)
-INSERT IGNORE INTO reservas (idInmersion, fecha, hora, idInstructor) VALUES
-(1, CURDATE() + INTERVAL 1 DAY, '10:00:00', 1),
-(2, CURDATE() + INTERVAL 2 DAY, '15:00:00', 2);
+INSERT IGNORE INTO reservas (idInmersion, fecha, hora, idInstructor, idBarco) VALUES
+(1, CURDATE() + INTERVAL 1 DAY, '10:00:00', 1, 1),
+(2, CURDATE() + INTERVAL 2 DAY, '15:00:00', 2, 2);
+INSERT IGNORE INTO reservas (idInmersion, fecha, hora, idInstructor, idBarco) VALUES
+(3, CURDATE() + INTERVAL 3 DAY, '09:30:00', 1, NULL),
+(4, CURDATE() + INTERVAL 4 DAY, '11:00:00', 2, NULL);
 
 -- Clientes en reservas
 INSERT IGNORE INTO reserva_clientes (idReserva, idCliente) VALUES (1, 1), (1, 2), (2, 3);
