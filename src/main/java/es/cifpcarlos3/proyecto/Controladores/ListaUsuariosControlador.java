@@ -50,7 +50,7 @@ public class ListaUsuariosControlador {
 
         usuario = Sesion.recuperarUsuario();
 
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombreCompleto"));
         colTlf.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colRol.setCellValueFactory(new PropertyValueFactory<>("rol"));
@@ -59,7 +59,7 @@ public class ListaUsuariosControlador {
 
         cargarUsuarios();
         tableUsuarios.setOnMouseClicked(event -> {
-            //obtenemos el cliente seleccionado
+            //obtenemos el usuario seleccionado
             Usuario usuarioSeleccionado = tableUsuarios.getSelectionModel().getSelectedItem();
 
             if(usuarioSeleccionado != null){
@@ -96,9 +96,9 @@ public class ListaUsuariosControlador {
         try {
             FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("usuario.fxml"));
             Parent root = vista.load();
-            //el controlador de la vista que se va a abrir (ficha con los datos del cliente)
+            //el controlador de la vista que se va a abrir (ficha con los datos del usuario)
             UsuarioControlador controlador = vista.getController();
-            controlador.setUsuario(usuario); //le pasamos el objeto cliente para que aparezcan sus datos
+            controlador.setUsuario(usuario); //le pasamos el objeto usuario para que aparezcan sus datos
             Scene scene = new Scene(root, 640, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
@@ -106,6 +106,8 @@ public class ListaUsuariosControlador {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
+
+            stage.setOnHidden(e -> cargarUsuarios());
         } catch (IOException e) {
             System.err.println("ERROR. Fallo al cargar la ficha del usuario");
         }

@@ -52,7 +52,7 @@ public class ListaInstructoresControlador {
         usuario = Sesion.recuperarUsuario();
         instructorDAO = new InstructorDAOImpl(db);
 
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombreCompleto"));
         colTlf.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colCertificacion.setCellValueFactory(new PropertyValueFactory<>("certificacion"));

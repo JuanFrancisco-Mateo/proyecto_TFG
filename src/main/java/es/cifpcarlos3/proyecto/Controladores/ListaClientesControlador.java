@@ -52,7 +52,7 @@ public class ListaClientesControlador {
 
         usuario = Sesion.recuperarUsuario();
 
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombreCompleto"));
         colDni.setCellValueFactory(new PropertyValueFactory<>("dni"));
         colTlf.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
@@ -118,6 +118,8 @@ public class ListaClientesControlador {
             stage.setScene(scene);
             stage.setResizable(false);
             stage.show();
+
+            stage.setOnHidden(e -> cargarClientes());
         } catch (IOException e) {
             System.err.println("ERROR. Fallo al cargar la ficha del cliente");
         }
