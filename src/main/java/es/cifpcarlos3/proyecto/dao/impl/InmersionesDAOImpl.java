@@ -36,7 +36,7 @@ public class InmersionesDAOImpl implements InmersionesDAO {
                 i.setPlazasMax(rdo.getInt("plazasMax"));
                 i.setPrecio(rdo.getDouble("precio"));
                 i.setDuracionMin(rdo.getInt("duracionMin"));
-               // i.setLugar(rdo.getString("lugar") != null ? rdo.getString("lugar") : "");
+                i.setLugar(rdo.getString("lugar") != null ? rdo.getString("lugar") : "");
                 inmersiones.add(i);
             }
 

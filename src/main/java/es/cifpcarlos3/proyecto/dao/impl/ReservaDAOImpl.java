@@ -1,5 +1,7 @@
 package es.cifpcarlos3.proyecto.dao.impl;
 
+import es.cifpcarlos3.proyecto.dao.BarcoDAO;
+import es.cifpcarlos3.proyecto.dao.InstructorDAO;
 import es.cifpcarlos3.proyecto.dao.ReservaDAO;
 import es.cifpcarlos3.proyecto.model.*;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
@@ -12,9 +14,13 @@ import java.util.List;
 
 public class ReservaDAOImpl implements ReservaDAO {
     private final DatabaseConnection db;
+    private final InstructorDAO instructorDAO;
+    private final BarcoDAO barcoDAO;
 
     public ReservaDAOImpl(DatabaseConnection db) {
         this.db = db;
+        instructorDAO = new InstructorDAOImpl(db);
+        barcoDAO = new BarcoDAOImpl(db);
     }
 
     private Reserva mapearReserva(ResultSet rdo) throws SQLException {
@@ -50,25 +56,29 @@ public class ReservaDAOImpl implements ReservaDAO {
         reserva.setInmersion(inmersion);
         reserva.setFecha(rdo.getDate("fecha").toLocalDate());
         reserva.setHora(rdo.getTime("hora").toLocalTime());
+        reserva.setLugar(rdo.getString("lugar"));
 
         // Instructor (podría cargarse por separado)
         int idInstructor = rdo.getInt("idInstructor");
         if (!rdo.wasNull()) {
-            Instructor instructor = new Instructor();
-            instructor.setIdInstructor(idInstructor);
+            Instructor instructor =  instructorDAO.devolverInstructor(idInstructor);
             reserva.setInstructor(instructor);
         }
-
+        int idBarco = rdo.getInt("idBarco");
+        if(!rdo.wasNull()){
+            reserva.setBarco(
+                    barcoDAO.devolverBarco(idBarco)
+            );
+        }
         return reserva;
     }
 
     @Override
     public List<Reserva> listarReservas() {
         List<Reserva> lista = new ArrayList<>();
-        String consulta = "SELECT r.*, i.nombre, i.certificacionMinima, i.plazasMax, i.precio, i.duracionMin, i.tipo, ic.lugar " +
+        String consulta = "SELECT r.*, i.nombre, i.certificacionMinima, i.plazasMax, i.precio, i.duracionMin, i.tipo, i.lugar " +
                           "FROM reservas r " +
                           "JOIN inmersion i ON r.idInmersion = i.idInmersion " +
-                          "LEFT JOIN inmersion_costa ic ON i.idInmersion = ic.idInmersion " +
                           "ORDER BY r.fecha, r.hora";
         try (Connection conn = db.getConnection();
              Statement stmt = conn.createStatement();
@@ -84,10 +94,9 @@ public class ReservaDAOImpl implements ReservaDAO {
 
     @Override
     public Reserva devolverReserva(int idReserva) {
-        String consulta = "SELECT r.*, i.nombre, i.certificacionMinima, i.plazasMax, i.precio, i.duracionMin, i.tipo, ic.lugar " +
+        String consulta = "SELECT r.*, i.nombre, i.certificacionMinima, i.plazasMax, i.precio, i.duracionMin, i.tipo, i.lugar " +
                           "FROM reservas r " +
                           "JOIN inmersion i ON r.idInmersion = i.idInmersion " +
-                          "LEFT JOIN inmersion_costa ic ON i.idInmersion = ic.idInmersion " +
                           "WHERE r.idReserva = ?";
         try (Connection conn = db.getConnection();
              PreparedStatement stmt = conn.prepareStatement(consulta)) {
