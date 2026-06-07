@@ -1,14 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.cifpcarlos3.proyecto.Controladores.ReservaControlador">
+    <children>
+        <Text layoutX="32.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RESERVA">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Line endX="478.33331298828125" endY="1.9073486328125E-6" layoutX="211.0" layoutY="31.0" startX="-100.0" />
+        <Text layoutX="64.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tipo: " />
+        <ComboBox fx:id="cbTipo" layoutX="96.0" layoutY="64.0" prefWidth="150.0" />
+        <Text layoutX="53.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Plazas: " />
+        <TextField fx:id="tfPlazas" layoutX="91.0" layoutY="207.0" prefHeight="25.0" prefWidth="64.0" />
+        <DatePicker fx:id="dpFecha" layoutX="96.0" layoutY="120.0" prefHeight="25.0" prefWidth="150.0" />
+        <Text layoutX="55.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha: " />
+        <Text layoutX="298.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hora: " />
+        <Text layoutX="285.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Instructor: " />
+        <Text layoutX="55.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Barco: " />
+        <Text layoutX="31.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CLIENTES">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Line endX="475.0" layoutX="211.0" layoutY="256.0" startX="-100.0" />
+        <ListView fx:id="lvClientes" layoutX="141.0" layoutY="298.0" prefHeight="157.0" prefWidth="368.0" />
+        <ComboBox fx:id="cbInstructor" layoutX="345.0" layoutY="208.0" prefWidth="150.0" />
+        <ComboBox fx:id="cbBarco" layoutX="96.0" layoutY="165.0" prefHeight="25.0" prefWidth="156.0" />
+        <ComboBox fx:id="cbHora" layoutX="337.0" layoutY="120.0" prefHeight="25.0" prefWidth="108.0" />
+        <Button fx:id="btnAddCliente" layoutX="314.0" layoutY="461.0" mnemonicParsing="false" onAction="#addCliente" text="Añadir cliente" />
+        <Button fx:id="btnModificar" layoutX="566.0" layoutY="463.0" mnemonicParsing="false" onAction="#modifReserva" text="Modificar" />
+        <Text layoutX="266.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Especialidad: " />
+        <ComboBox fx:id="cbEspecialidad" layoutX="337.0" layoutY="64.0" prefHeight="25.0" prefWidth="141.0" />
+        <Text layoutX="174.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Precio: " />
+        <TextField fx:id="tfPrecio" layoutX="214.0" layoutY="208.0" prefHeight="25.0" prefWidth="64.0" />
+        <ComboBox fx:id="cbClientes" layoutX="359.0" layoutY="267.0" prefWidth="150.0" />
+        <Button fx:id="btnCrearCliente" layoutX="529.0" layoutY="267.0" mnemonicParsing="false" onAction="#irCrearCliente" text="Crear Cliente" />
+        <Text layoutX="290.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lugar:" />
+        <TextField fx:id="txtLugar" layoutX="337.0" layoutY="165.0" prefHeight="25.0" prefWidth="141.0" />
+      <Button fx:id="btnRemoveCliente" layoutX="408.0" layoutY="461.0" mnemonicParsing="false" onAction="#removeCliente" text="Eliminar Cliente" />
+    </children>
+   <padding>
+      <Insets bottom="10.0" />
+   </padding>
 </AnchorPane>
