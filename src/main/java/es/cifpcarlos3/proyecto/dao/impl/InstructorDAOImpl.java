@@ -1,6 +1,7 @@
 package es.cifpcarlos3.proyecto.dao.impl;
 
 import es.cifpcarlos3.proyecto.dao.InstructorDAO;
+import es.cifpcarlos3.proyecto.model.Especialidad;
 import es.cifpcarlos3.proyecto.model.Instructor;
 
 import java.time.LocalDate;
@@ -94,10 +95,10 @@ public class InstructorDAOImpl implements InstructorDAO {
     }
 
     @Override
-    public void crearInstructor(Instructor instructor) {
+    public void crearInstructor(Instructor instructor) throws SQLException{
         String consulta = "INSERT INTO instructores (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = db.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(consulta)) {
+             PreparedStatement stmt = conn.prepareStatement(consulta,Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, instructor.getNombre());
             stmt.setString(2, instructor.getApellidos());
             stmt.setString(3, instructor.getDni());
@@ -107,6 +108,16 @@ public class InstructorDAOImpl implements InstructorDAO {
             stmt.setString(7, instructor.getTelefonoUrgencia());
             stmt.setString(8, instructor.getCertificacion() != null ? instructor.getCertificacion().name() : null);
             stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+
+            if(rs.next()){
+                int idCliente = rs.getInt(1);
+                for(Especialidad esp : instructor.getEspecialidades()){
+                    int idEspecialidad = getIdEspecialidadPorNombre(esp.name());
+                    addEspecialidad(idCliente, idEspecialidad);
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error al crear instructor: " + e.getMessage());
         }
@@ -143,4 +154,48 @@ public class InstructorDAOImpl implements InstructorDAO {
             System.err.println("Error al eliminar instructor: " + e.getMessage());
         }
     }
+
+    @Override
+    public void addEspecialidad(int idInstructor, int idEspecialidad) {
+        String consulta = "INSERT INTO instructor_especialidad (idInstructor, idEspecialidad) VALUES (?, ?)";
+        try (Connection conn = db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(consulta)) {
+            stmt.setInt(1, idInstructor);
+            stmt.setInt(2, idEspecialidad);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al añadir especialidad al instructor: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void removeEspecialidad(int idInstructor, int idEspecialidad) {
+        String consulta = "DELETE FROM instructor_especialidad WHERE idInstructor = ? AND idEspecialidad = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(consulta)) {
+            stmt.setInt(1, idInstructor);
+            stmt.setInt(2, idEspecialidad);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar especialidad del instructor: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public int getIdEspecialidadPorNombre(String nombre) {
+        String sql = "SELECT idEspecialidad FROM especialidades WHERE nombre = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nombre);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idEspecialidad");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error obteniendo id especialidad: " + e.getMessage());
+        }
+        return -1;    }
 }
