@@ -204,7 +204,10 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
             AnchorPane centro = vista.load();
 
             contenido.getChildren().clear();
-            contenido.getChildren().add(centro);
+            AnchorPane.setTopAnchor(centro, 0.0);
+            AnchorPane.setBottomAnchor(centro, 0.0);
+            AnchorPane.setLeftAnchor(centro, 0.0);
+            AnchorPane.setRightAnchor(centro, 0.0);
 
             contenido.getChildren().setAll(centro);
             log.info("El usuario (administrador) ha accedido a 'Usuarios'");
@@ -221,7 +224,10 @@ public class BaseControlador { //Controlar tanto el menu latera como el menu sup
             AnchorPane centro = vista.load();
 
             contenido.getChildren().clear();
-            contenido.getChildren().add(centro);
+            AnchorPane.setTopAnchor(centro, 0.0);
+            AnchorPane.setBottomAnchor(centro, 0.0);
+            AnchorPane.setLeftAnchor(centro, 0.0);
+            AnchorPane.setRightAnchor(centro, 0.0);
 
             contenido.getChildren().setAll(centro);
             log.info("El usuario (administrador) ha accedido a 'Instructores'");
