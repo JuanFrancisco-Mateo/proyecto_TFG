@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,8 +27,6 @@ import java.util.Base64;
 
 public class CrearUsuarioControlador {
 
-
-
     @javafx.fxml.FXML
     private Button btnGuardarUsuario;
     @javafx.fxml.FXML
@@ -39,16 +38,19 @@ public class CrearUsuarioControlador {
     @javafx.fxml.FXML
     private TextField txtEmail;
     @javafx.fxml.FXML
-    private TextField txtTlf;
-    @javafx.fxml.FXML
     private TextField txtPassword;
     @FXML
     private TextField txtUsername;
+    @FXML
+    private DatePicker dpFechaNac;
+    @FXML
+    private TextField txtDni;
+    @FXML
+    private TextField txtTlf;
 
     private DatabaseConnection db;
     private UsuarioDAO usuarioDAO;
     private static final Logger log = LogManager.getLogger(CrearUsuarioControlador.class);
-
 
     public void initialize(){
         db = new DatabaseConnection();
@@ -63,7 +65,9 @@ public class CrearUsuarioControlador {
                 || txtEmail.getText().isBlank()
                 || txtTlf.getText().isBlank()
                 || txtPassword.getText().isBlank()
-                || cbRoles.getValue() == null) {
+                || cbRoles.getValue() == null
+                || txtDni.getText().isBlank()
+                || dpFechaNac.getValue()==null) {
 
             Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Campos vacíos");
@@ -97,11 +101,26 @@ public class CrearUsuarioControlador {
                 String tlf=txtTlf.getText();
                 String username = txtUsername.getText();
                 String passwordHash = PasswordUtil.hashPassword(txtPassword.getText());
-                usuarioDAO.crearUsuario(nombre, apellidos, email, tlf, username, passwordHash, rol);
+                String dni = txtDni.getText();
+                LocalDate fechaNac = dpFechaNac.getValue();
+                try {
+                    usuarioDAO.crearUsuario(nombre, apellidos, email, tlf, username, passwordHash, rol,dni, fechaNac);
 
-                //se cierra la ventana
-                btnGuardarUsuario.getScene().getWindow().hide();
+                    //se cierra la ventana
+                    btnGuardarUsuario.getScene().getWindow().hide();
+                }catch (SQLException e){
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Error");
+                    alerta.setHeaderText("No se pudo crear el cliente");
 
+                    if (e.getMessage().contains("dni")) {
+                        alerta.setContentText("Ya existe un cliente con ese DNI");
+                    } else {
+                        alerta.setContentText(e.getMessage());
+                    }
+
+                    alerta.showAndWait();
+                }
             } catch (NumberFormatException e) {
                 Alert alerta = new Alert(Alert.AlertType.ERROR);
                 alerta.setTitle("Formato incorrecto");
