@@ -4,7 +4,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
@@ -12,39 +11,39 @@
 
 <AnchorPane fx:id="clientesContenido" prefHeight="299.0" prefWidth="382.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.cifpcarlos3.proyecto.Controladores.ClientesControlador">
     <children>
-        <Text layoutX="25.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS PERSONALES" />
-        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="249.0" layoutY="33.0" startX="-100.0" />
-        <Text layoutX="49.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre:" />
-        <Text layoutX="240.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apellidos:" />
-        <Text layoutX="438.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DNI:" />
-        <Text layoutX="36.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha Nac:" />
-        <DatePicker fx:id="txtFecha" layoutX="99.0" layoutY="103.0" prefHeight="25.0" prefWidth="129.0" />
-        <TextField fx:id="txtNombre" layoutX="99.0" layoutY="57.0" prefHeight="25.0" prefWidth="129.0" />
-        <TextField fx:id="txtApellidos" layoutX="298.0" layoutY="57.0" prefHeight="25.0" prefWidth="129.0" />
-        <TextField fx:id="txtDni" layoutX="469.0" layoutY="57.0" prefHeight="25.0" prefWidth="111.0" />
-        <Text layoutX="260.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
-        <TextField fx:id="txtEmail" layoutX="300.0" layoutY="103.0" prefHeight="25.0" prefWidth="129.0" />
-        <Text layoutX="442.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tlf:" />
-        <TextField fx:id="txtTlf" layoutX="469.0" layoutY="103.0" prefHeight="25.0" prefWidth="111.0" />
-        <Text layoutX="24.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS BUCEADOR" />
-        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="259.0" layoutY="185.0" startX="-122.33332824707031" startY="1.52587890625E-5" />
-        <Text layoutX="24.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Certificado:" />
-        <Text layoutX="243.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha Expedición:" />
-        <Text layoutX="492.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Presentado: " />
-        <Text layoutX="266.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Válido hasta:" />
-        <Text layoutX="28.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ESPECIALIDADES" />
-        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="269.0" layoutY="309.0" startX="-141.66665649414062" />
-        <ListView fx:id="lvEspecialidades" layoutX="139.0" layoutY="356.0" prefHeight="128.0" prefWidth="241.0" />
-        <Button fx:id="btnModificarCliente" layoutX="528.0" layoutY="456.0" mnemonicParsing="false" onAction="#modificarCliente" text="Modificar" />
-        <Button fx:id="btnAddEspecialidad" layoutX="401.0" layoutY="317.0" mnemonicParsing="false" onAction="#addEspecialidad" text="Añadir especialidad" />
-        <TextField fx:id="txtCertificado" layoutX="84.0" layoutY="213.0" prefHeight="25.0" prefWidth="147.0" />
-        <DatePicker fx:id="txtFechaCertificado" layoutX="337.0" layoutY="213.0" prefHeight="25.0" prefWidth="147.0" />
-        <RadioButton fx:id="btnPresentado" layoutX="563.0" layoutY="217.0" mnemonicParsing="false" />
-        <DatePicker fx:id="txtFechaValidez" layoutX="337.0" layoutY="258.0" prefHeight="25.0" prefWidth="147.0" />
-        <Text layoutX="21.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número Seguro:" />
-        <TextField fx:id="txtSeguro" layoutX="108.0" layoutY="259.0" prefHeight="25.0" prefWidth="147.0" />
-      <ComboBox fx:id="cbEspecialidad" layoutX="231.0" layoutY="317.0" prefWidth="150.0" />
-      <Text layoutX="12.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tlf Emergencia:" />
-      <TextField fx:id="txtTlfEMergencia" layoutX="99.0" layoutY="138.0" prefHeight="25.0" prefWidth="129.0" />
+        <Text layoutX="25.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS PERSONALES" />
+        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="249.0" layoutY="50.0" startX="-100.0" />
+        <Text layoutX="49.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre:" />
+        <Text layoutX="240.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Apellidos:" />
+        <Text layoutX="438.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DNI:" />
+        <Text layoutX="36.0" layoutY="136.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha Nac:" />
+        <DatePicker fx:id="txtFecha" layoutX="99.0" layoutY="120.0" prefHeight="25.0" prefWidth="129.0" />
+        <TextField fx:id="txtNombre" layoutX="99.0" layoutY="74.0" prefHeight="25.0" prefWidth="129.0" />
+        <TextField fx:id="txtApellidos" layoutX="298.0" layoutY="74.0" prefHeight="25.0" prefWidth="129.0" />
+        <TextField fx:id="txtDni" layoutX="469.0" layoutY="74.0" prefHeight="25.0" prefWidth="111.0" />
+        <Text layoutX="260.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
+        <TextField fx:id="txtEmail" layoutX="300.0" layoutY="120.0" prefHeight="25.0" prefWidth="129.0" />
+        <Text layoutX="442.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tlf:" />
+        <TextField fx:id="txtTlf" layoutX="469.0" layoutY="120.0" prefHeight="25.0" prefWidth="111.0" />
+        <Text layoutX="24.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS BUCEADOR" />
+        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="259.0" layoutY="202.0" startX="-122.33332824707031" startY="1.52587890625E-5" />
+        <Text layoutX="51.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Certificado:" />
+        <Text layoutX="306.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fecha Expedición:" />
+        <Text layoutX="331.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Válido hasta:" />
+        <Text layoutX="28.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ESPECIALIDADES" />
+        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="269.0" layoutY="326.0" startX="-141.66665649414062" />
+        <ListView fx:id="lvEspecialidades" layoutX="139.0" layoutY="373.0" prefHeight="128.0" prefWidth="241.0" />
+        <Button fx:id="btnModificarCliente" layoutX="469.0" layoutY="462.0" mnemonicParsing="false" onAction="#modificarCliente" text="Modificar cliente" />
+        <Button fx:id="btnAddEspecialidad" layoutX="390.0" layoutY="373.0" mnemonicParsing="false" onAction="#addEspecialidad" prefHeight="25.0" prefWidth="127.0" text="Añadir especialidad" />
+        <TextField fx:id="txtCertificado" layoutX="117.0" layoutY="230.0" prefHeight="25.0" prefWidth="147.0" />
+        <DatePicker fx:id="txtFechaCertificado" layoutX="410.0" layoutY="229.0" prefHeight="25.0" prefWidth="147.0" />
+        <DatePicker fx:id="txtFechaValidez" layoutX="410.0" layoutY="275.0" prefHeight="25.0" prefWidth="147.0" />
+        <Text layoutX="21.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Número Seguro:" />
+        <TextField fx:id="txtSeguro" layoutX="117.0" layoutY="275.0" prefHeight="25.0" prefWidth="147.0" />
+      <ComboBox fx:id="cbEspecialidad" layoutX="231.0" layoutY="334.0" prefWidth="150.0" promptText="Especialidad" />
+      <Text layoutX="12.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tlf Emergencia:" />
+      <TextField fx:id="txtTlfEMergencia" layoutX="99.0" layoutY="155.0" prefHeight="25.0" prefWidth="129.0" />
+      <Button fx:id="btnDeleteEspecialidad" layoutX="390.0" layoutY="405.0" mnemonicParsing="false" onAction="#deleteEspecialidad" text="Eliminar especialidad" />
+      <Button fx:id="btnEliminar" layoutX="487.0" layoutY="14.0" mnemonicParsing="false" onAction="#deleteCliente" text="Eliminar cliente" AnchorPane.bottomAnchor="461.6666666666667" />
     </children>
 </AnchorPane>
