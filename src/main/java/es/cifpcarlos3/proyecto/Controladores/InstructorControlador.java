@@ -16,8 +16,6 @@ public class InstructorControlador {
     @javafx.fxml.FXML
     private TextField txtNombre;
     @javafx.fxml.FXML
-    private ComboBox<Certificacion> cbCertificacion;
-    @javafx.fxml.FXML
     private TextField txtApellidos;
     @javafx.fxml.FXML
     private TextField txtEmail;
@@ -36,17 +34,18 @@ public class InstructorControlador {
     @javafx.fxml.FXML
     private Button btnAddEspecialidad;
     @javafx.fxml.FXML
-    private ComboBox<Especialidad> cbEspecialidad;
-    @javafx.fxml.FXML
     private Button btnDeleteEspecialidad;
     @javafx.fxml.FXML
     private TextField txtTlfEMergencia;
+    @FXML
+    private ComboBox<Certificacion> cbCertificacion;
+    @FXML
+    private ComboBox<Especialidad> cbEspecialidad;
 
     private Instructor instructor;
     private InstructorDAO instructorDAO;
     private DatabaseConnection db;
     private static final Logger log = LogManager.getLogger(InstructorControlador.class);
-
 
     public void initialize(){
         db = new DatabaseConnection();
