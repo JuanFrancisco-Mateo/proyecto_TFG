@@ -158,6 +158,9 @@ public class ClientesControlador {
         Especialidad especialidad = lvEspecialidades.getSelectionModel().getSelectedItem();
         int idEsp = clienteDAO.getIdEspecialidadPorNombre(especialidad.name());
         clienteDAO.removeEspecialidad(cliente.getIdCliente(), idEsp);
+        if(especialidad != null){
+            lvEspecialidades.getItems().remove(especialidad);
+        }
     }
 
     @FXML

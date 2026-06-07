@@ -32,8 +32,6 @@ public class CrearClienteControlador {
     @javafx.fxml.FXML
     private ComboBox<Certificacion> cbCertificado;
     @javafx.fxml.FXML
-    private RadioButton btnPresentado;
-    @javafx.fxml.FXML
     private Button btnGuardarCliente;
     @javafx.fxml.FXML
     private DatePicker txtFecha;
