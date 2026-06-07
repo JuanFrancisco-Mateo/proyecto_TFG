@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -25,14 +24,13 @@
         <TextField fx:id="txtEmail" layoutX="147.0" layoutY="157.0" prefHeight="25.0" prefWidth="147.0" />
         <Text layoutX="357.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Teléfono:" />
         <TextField fx:id="txtTlf" layoutX="420.0" layoutY="158.0" prefHeight="25.0" prefWidth="139.0" />
-        <Text layoutX="23.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS EMPLEADO" />
-        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="253.0" layoutY="209.0" startX="-122.33332824707031" startY="1.52587890625E-5" />
+        <Text layoutX="23.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DATOS EMPLEADO" />
+        <Line endX="331.0" endY="-3.814697265625E-6" layoutX="253.0" layoutY="250.0" startX="-122.33332824707031" startY="1.52587890625E-5" />
         <Button fx:id="btnModifUsuario" layoutX="501.0" layoutY="310.0" mnemonicParsing="false" onAction="#modifUsuario" prefWidth="83.0" text="Modificar" />
-        <Text layoutX="98.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rol:" />
-      <ComboBox fx:id="cbRol" layoutX="146.0" layoutY="228.0" prefWidth="150.0" />
+        <Text layoutX="98.0" layoutY="287.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rol:" />
+      <ComboBox fx:id="cbRol" layoutX="146.0" layoutY="269.0" prefWidth="150.0" />
       <Button fx:id="btnDeleteUser" layoutX="492.0" layoutY="14.0" mnemonicParsing="false" onAction="#deleteUser" text="Eliminar usuario" />
+      <Text layoutX="74.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
+      <TextField fx:id="txtUsername" layoutX="146.0" layoutY="195.0" prefHeight="25.0" prefWidth="147.0" />
     </children>
-   <padding>
-      <Insets top="20.0" />
-   </padding>
 </AnchorPane>
