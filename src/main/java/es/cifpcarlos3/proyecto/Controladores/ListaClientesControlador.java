@@ -90,7 +90,7 @@ public class ListaClientesControlador {
             try {
                 FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearCliente.fxml"));
                 Parent root = vista.load();
-                Scene scene = new Scene(root, 640, 530);
+                Scene scene = new Scene(root, 700, 530);
                 scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
                 Stage stage = new Stage();
                 stage.setTitle("Nuevo Cliente");
@@ -111,7 +111,7 @@ public class ListaClientesControlador {
             //el controlador de la vista que se va a abrir (ficha con los datos del cliente)
             ClientesControlador controlador = vista.getController();
             controlador.setCliente(cliente); //le pasamos el objeto cliente para que aparezcan sus datos
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Datos del cliente");

@@ -79,7 +79,7 @@ public class ListaInstructoresControlador {
         try {
             FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearInstructor.fxml"));
             Parent root = vista.load();
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Nuevo Instructor");
@@ -99,7 +99,7 @@ public class ListaInstructoresControlador {
             //el controlador de la vista que se va a abrir (ficha con los datos del instructor)
             InstructorControlador controlador = vista.getController();
             controlador.setInstructor(instructor); //le pasamos el objeto instructor para que aparezcan sus datos
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Datos del instructor");

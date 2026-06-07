@@ -80,7 +80,7 @@ public class ListaUsuariosControlador {
         try {
             FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearUsuario.fxml"));
             Parent root = vista.load();
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Nuevo Usuario");
@@ -99,7 +99,7 @@ public class ListaUsuariosControlador {
             //el controlador de la vista que se va a abrir (ficha con los datos del usuario)
             UsuarioControlador controlador = vista.getController();
             controlador.setUsuario(usuario); //le pasamos el objeto usuario para que aparezcan sus datos
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Datos del usuario");

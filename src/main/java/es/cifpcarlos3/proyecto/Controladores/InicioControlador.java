@@ -73,7 +73,7 @@ public class InicioControlador {
             Parent root = vista.load();
             ReservaControlador controlador = vista.getController();
             controlador.setReserva(reserva);
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Datos de la reserva");

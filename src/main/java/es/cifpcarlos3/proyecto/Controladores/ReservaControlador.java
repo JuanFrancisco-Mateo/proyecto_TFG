@@ -1,12 +1,8 @@
 package es.cifpcarlos3.proyecto.Controladores;
 
 import es.cifpcarlos3.proyecto.HelloApplication;
-import es.cifpcarlos3.proyecto.dao.ClienteDAO;
-import es.cifpcarlos3.proyecto.dao.InmersionesDAO;
-import es.cifpcarlos3.proyecto.dao.ReservaDAO;
-import es.cifpcarlos3.proyecto.dao.impl.ClienteDAOImpl;
-import es.cifpcarlos3.proyecto.dao.impl.InmersionesDAOImpl;
-import es.cifpcarlos3.proyecto.dao.impl.ReservaDAOImpl;
+import es.cifpcarlos3.proyecto.dao.*;
+import es.cifpcarlos3.proyecto.dao.impl.*;
 import es.cifpcarlos3.proyecto.model.*;
 import es.cifpcarlos3.proyecto.util.DatabaseConnection;
 import javafx.event.ActionEvent;
@@ -19,9 +15,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ReservaControlador {
@@ -60,9 +58,18 @@ public class ReservaControlador {
     private ReservaDAO reservaDAO;
     private ClienteDAO clienteDAO;
     private InmersionesDAO inmersionesDAO;
+    private BarcoDAO barcoDAO;
+    private InstructorDAO instructorDAO;
+    private List<Cliente> todosClientes;
+
     Usuario usuario;
     private static final Logger log = LogManager.getLogger(ReservaControlador.class);
-
+    @javafx.fxml.FXML
+    private TextField txtBuscador;
+    @javafx.fxml.FXML
+    private ComboBox cbInmersion;
+    @javafx.fxml.FXML
+    private Button btnDeleteReserva;
 
 
     public void initialize(){
@@ -72,25 +79,35 @@ public class ReservaControlador {
         inmersionesDAO = new InmersionesDAOImpl(db);
         reservaDAO = new ReservaDAOImpl(db);
         clienteDAO = new ClienteDAOImpl(db);
+        barcoDAO = new BarcoDAOImpl(db);
+        instructorDAO = new InstructorDAOImpl(db);
 
         //Solo se puede modificar la hora, fecha, instructor, barco, lugar y clientes
         cbTipo.setDisable(true);
         tfPlazas.setDisable(true);
         tfPrecio.setDisable(true);
+        cbEspecialidad.setDisable(true);
+
+        // Listeners para actualizar instructores disponibles
+        dpFecha.valueProperty().addListener((obs, old, newVal) -> actualizarInstructoresYBarco());
+        cbHora.valueProperty().addListener((obs, old, newVal) -> actualizarInstructoresYBarco());
 
         //para que puedan buscar los clientes por nombre, en principio los añadimos todos
-        cbClientes.setEditable(true);
-        List<Cliente> listaClientes = clienteDAO.listarClientes();
-        cbClientes.getItems().setAll(listaClientes);
+        cbClientes.setEditable(false);
+        todosClientes = clienteDAO.listarClientes();
+        cbClientes.getItems().setAll(todosClientes);
         //ponemos un listener para que al buscar un cliente aparezcan solo los que tienen ese nombre
-        cbClientes.getEditor().textProperty().addListener((observable, oldValue, newValue) -> buscadorClientes(newValue));
-
+        txtBuscador.textProperty().addListener((observable, oldValue, newValue) -> {
+            buscadorClientes(newValue);
+        });
+        txtLugar.setDisable(true);
 
     }
     public void setReserva(Reserva reserva) {
         this.reserva = reserva;
         dpFecha.setValue(reserva.getFecha());
         cbHora.setValue(reserva.getHora());
+        cbInstructor.getItems().setAll(instructorDAO.listarInstructores());
         cbInstructor.setValue(reserva.getInstructor());
         lvClientes.getItems().setAll(reservaDAO.getClientes(reserva.getId()));
         cbTipo.setValue(reserva.getInmersion().getTipo());
@@ -99,7 +116,32 @@ public class ReservaControlador {
         if(reserva.getInmersion().getTipo().equalsIgnoreCase("Costa")){
             txtLugar.setText(reserva.getLugar());
         }else if(reserva.getInmersion().getTipo().equalsIgnoreCase("Barco")){
+            cbBarco.getItems().setAll(barcoDAO.listarBarcos());
             cbBarco.setValue(reserva.getBarco());
+        }
+        cbEspecialidad.getItems().setAll(Especialidad.values());
+
+    }
+    private void actualizarInstructoresYBarco() {
+        if (dpFecha.getValue() != null && cbHora.getValue() != null) {
+            LocalDate fecha = dpFecha.getValue();
+            LocalTime hora = cbHora.getValue();
+
+            // Instructores disponibles
+            List<Instructor> disponibles = instructorDAO.buscarDisponibles(fecha, hora);
+            cbInstructor.getItems().setAll(disponibles);
+
+            // Barco disponible (solo si es tipo BARCO)
+            if ("BARCO".equals(cbTipo.getValue())) {
+                List<Barco> barcos = barcoDAO.devolverBarcoDisponible(fecha, hora);
+                if (barcos.isEmpty()) {
+                    cbBarco.getItems().clear();
+                    cbBarco.getItems().setAll(new Barco(0, "No hay barcos disponibles", 0));
+                } else {
+                    cbBarco.getItems().clear();
+                    cbBarco.getItems().setAll(barcos);
+                }
+            }
         }
     }
 
@@ -145,7 +187,7 @@ public class ReservaControlador {
         try {
             FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearCliente.fxml"));
             Parent root = vista.load();
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Nuevo Cliente");
@@ -173,9 +215,7 @@ public class ReservaControlador {
 
         //Si no ha escrito nada devolvemos todos los clientes
         if (texto == null || texto.isBlank()) {
-            cbClientes.getItems().clear();
-            List<Cliente> listaClientes = clienteDAO.listarClientes();
-            cbClientes.getItems().setAll(listaClientes);
+            cbClientes.getItems().setAll(todosClientes);
             return;
         }
         //se puede buscar por nombre o por dni
@@ -197,6 +237,9 @@ public class ReservaControlador {
         reserva.setFecha(dpFecha.getValue());
         reserva.setHora(cbHora.getValue());
         reserva.setInstructor(cbInstructor.getValue());
+        if(reserva.getInmersion().getTipo().equalsIgnoreCase("Barco")){
+            reserva.setBarco(cbBarco.getValue());
+        }
 
         reservaDAO.modifReserva(reserva);
 
@@ -208,5 +251,29 @@ public class ReservaControlador {
         alerta.setHeaderText("ERROR");
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+
+    @javafx.fxml.FXML
+    public void deleteReserva(ActionEvent actionEvent) {
+        Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+        alerta.setTitle("Eliminar reserva");
+        alerta.setHeaderText("Confirmación");
+        alerta.setContentText("¿Está seguro de que quiere eliminar la reserva?");
+
+        //Para coger lo seleccionado por el usuario
+        Optional<ButtonType> resultado = alerta.showAndWait();
+
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            reservaDAO.eliminarReserva(reserva.getId());
+            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+            ok.setContentText("Reserva eliminada correctamente");
+            ok.showAndWait();
+            //se cierra la ventana
+            btnDeleteReserva.getScene().getWindow().hide();
+        }else{
+            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+            ok.setContentText("No se pudo eliminar la reserva");
+            ok.showAndWait();
+        }
     }
 }

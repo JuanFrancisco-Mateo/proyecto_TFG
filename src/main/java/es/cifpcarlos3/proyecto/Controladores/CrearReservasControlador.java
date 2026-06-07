@@ -12,15 +12,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class CrearReservasControlador {
     @FXML
@@ -51,6 +50,12 @@ public class CrearReservasControlador {
     private Button btnCrearCliente;
     @FXML
     private TextField txtLugar;
+    @FXML
+    private Button btnRemoveCliente;
+    @FXML
+    private ComboBox<Inmersion> cbInmersion;
+    @FXML
+    private TextField txtBuscador;
 
     private ReservaDAO reservaDAO;
     private InmersionesDAO inmersionesDAO;
@@ -58,13 +63,14 @@ public class CrearReservasControlador {
     private ClienteDAO clienteDAO;
     private BarcoDAO barcoDAO;
     private List<Cliente> clientesSeleccionados;
+    private List<Cliente> todosClientes;
     private Inmersion inmersionSeleccionada;
 
     Usuario usuario;
     private static final Logger log = LogManager.getLogger(CrearReservasControlador.class);
 
 
-    public void initialize(){
+    public void initialize() {
         DatabaseConnection db = new DatabaseConnection();
         //recuperamos el usuario que inicio sesion
         usuario = Sesion.recuperarUsuario();
@@ -74,6 +80,10 @@ public class CrearReservasControlador {
         clienteDAO = new ClienteDAOImpl(db);
         barcoDAO = new BarcoDAOImpl(db);
         clientesSeleccionados = new ArrayList<>();
+
+        //Estos campos son automaticos de la base de datos
+        tfPlazas.setDisable(true);
+        tfPrecio.setDisable(true);
 
         // Cargar tipos de inmersión
         cbTipo.getItems().addAll("BARCO", "COSTA");
@@ -90,24 +100,63 @@ public class CrearReservasControlador {
         cbTipo.valueProperty().addListener((obs, old, newVal) -> onTipoChanged());
 
         //para que puedan buscar los clientes por nombre, en principio los añadimos todos
-        cbClientes.setEditable(true);
-        List<Cliente> listaClientes = clienteDAO.listarClientes();
-        cbClientes.getItems().setAll(listaClientes);
+        cbClientes.setEditable(false);
+        todosClientes = clienteDAO.listarClientes();
+        cbClientes.getItems().setAll(todosClientes);
         //ponemos un listener para que al buscar un cliente aparezcan solo los que tienen ese nombre
-        cbClientes.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+        txtBuscador.textProperty().addListener((observable, oldValue, newValue) -> {
             buscadorClientes(newValue);
         });
+
+        txtLugar.setDisable(true);
+        //Ponemos toda la lista de inmersiones de la base de datos
+        cbInmersion.getItems().setAll(inmersionesDAO.listarInmersiones());
+
+        //Cuando el usuario selecciona una inmersion, ponemos solo las de ese tipo usando un listener
+        cbInmersion.valueProperty().addListener((obs, old, val) -> onInmersionChanged(val));
+
+    }
+    private void onInmersionChanged(Inmersion inmersion){
+        inmersionSeleccionada = inmersion;
+            //Si no hay nada seleccionado salimos del metodo
+            if (inmersion== null){
+                tfPrecio.clear();
+                tfPlazas.clear();
+                txtLugar.clear();
+                return;
+            }
+
+            tfPrecio.setText(String.format("%.2f", inmersion.getPrecio()));
+            tfPlazas.setText(String.valueOf(inmersion.getPlazasMax()));
+            if(inmersion.getTipo().equalsIgnoreCase("Costa")){
+                txtLugar.setText(inmersion.getLugar());
+            }
+            if(inmersion.getTipo().equalsIgnoreCase("Barco")){
+                txtLugar.clear();
+            }
+
     }
 
     private void onTipoChanged() {
         String tipo = cbTipo.getValue();
-        // Mostrar/ocultar barco según tipo
-        cbBarco.setDisable(!"BARCO".equals(tipo));
-        if (!"BARCO".equals(tipo)) {
-            cbBarco.getSelectionModel().clearSelection();
-            cbBarco.setValue(null);
-        }
 
+        //Mostramos la lista de inmesiones segun el tipo
+        List<Inmersion> lista = inmersionesDAO.listarInmersiones()
+                .stream()
+                .filter(i -> i.getTipo().equals(tipo))
+                .toList();
+
+        cbInmersion.getItems().setAll(lista);
+        // Mostrar/ocultar barco según tipo
+        if ("BARCO".equals(tipo)) {
+            cbBarco.setDisable(false);
+            txtLugar.setDisable(true);
+        } else {
+            cbBarco.setDisable(true);
+            txtLugar.setDisable(false);
+            cbBarco.getSelectionModel().clearSelection();
+        }
+/*
         inmersionSeleccionada = null;
 
         tfPlazas.clear();
@@ -118,11 +167,13 @@ public class CrearReservasControlador {
             if (i.getTipo().equals(tipo)) {
                 // Usamos la primera inmersión de ese tipo como referencia
                 inmersionSeleccionada = i;
-                tfPlazas.setText(String.valueOf(i.getPlazasMax()));
-                tfPrecio.setText(String.format("%.2f", i.getPrecio()));
+               // tfPlazas.setText(String.valueOf(i.getPlazasMax()));
+               // tfPrecio.setText(String.format("%.2f", i.getPrecio()));
                 break;
             }
         }
+
+ */
     }
 
     private void actualizarInstructoresYBarco() {
@@ -132,17 +183,23 @@ public class CrearReservasControlador {
 
             // Instructores disponibles
             List<Instructor> disponibles = instructorDAO.buscarDisponibles(fecha, hora);
-            cbInstructor.getItems().setAll(disponibles);
+            if(disponibles.isEmpty()){
+                Instructor noExiste = new Instructor();
+                noExiste.setNombre("No hay instructores disponibles");
+                noExiste.setApellidos(" para esa fecha.");
+            }else {
+                cbInstructor.getItems().setAll(disponibles);
+            }
 
             // Barco disponible (solo si es tipo BARCO)
             if ("BARCO".equals(cbTipo.getValue())) {
-                Barco barco = barcoDAO.devolverBarcoDisponible(fecha, hora);
-                if (barco != null) {
+                List<Barco> barcos = barcoDAO.devolverBarcoDisponible(fecha, hora);
+                if (barcos.isEmpty()) {
                     cbBarco.getItems().clear();
-                    cbBarco.getItems().add(barco);
-                    cbBarco.getSelectionModel().select(0);
+                    cbBarco.getItems().setAll(new Barco(0, "No hay barcos disponibles", 0));
                 } else {
                     cbBarco.getItems().clear();
+                    cbBarco.getItems().setAll(barcos);
                 }
             }
         }
@@ -175,9 +232,6 @@ public class CrearReservasControlador {
 
             clientesSeleccionados.add(cliente);
             lvClientes.getItems().setAll(clientesSeleccionados);
-        // Limpiar selección
-        cbClientes.getSelectionModel().clearSelection();
-        cbClientes.getEditor().clear();
         }
 
 
@@ -270,7 +324,7 @@ public class CrearReservasControlador {
         try {
             FXMLLoader vista = new FXMLLoader(HelloApplication.class.getResource("crearCliente.fxml"));
             Parent root = vista.load();
-            Scene scene = new Scene(root, 640, 530);
+            Scene scene = new Scene(root, 700, 530);
             scene.getStylesheets().add(getClass().getResource("/es/cifpcarlos3/proyecto/stylesPantallas.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Nuevo Cliente");
@@ -287,16 +341,27 @@ public class CrearReservasControlador {
 
         //Si no ha escrito nada devolvemos todos los clientes
         if (texto == null || texto.isBlank()) {
-            cbClientes.getItems().clear();
-            List<Cliente> listaClientes = clienteDAO.listarClientes();
-            cbClientes.getItems().setAll(listaClientes);
+            cbClientes.getItems().setAll(todosClientes);
             return;
         }
-        //Buscamos clientes por nombre
-         List<Cliente> clientes = clienteDAO.buscarPorNombre(texto);
-        //tambien se puede buscar por dni
-        //List<Cliente> cliente = clienteDAO.buscarPorDni(dni);
-        //Actualizamos el combo box
-        cbClientes.getItems().setAll(clientes);
+        //se puede buscar por nombre o por dni
+        List<Cliente> clientesNombre = clienteDAO.buscarPorNombre(texto);
+        List<Cliente> clientesDni = clienteDAO.buscarPorDni(texto);
+
+        Set<Cliente> resultado = new HashSet<>();
+        resultado.addAll(clientesNombre);
+        resultado.addAll(clientesDni);
+
+        cbClientes.getItems().setAll(resultado);
+    }
+
+    @FXML
+    public void removeCliente(ActionEvent actionEvent) {
+        Cliente cliente = lvClientes.getSelectionModel().getSelectedItem();
+
+        if (cliente != null) {
+            clientesSeleccionados.remove(cliente);
+            lvClientes.getItems().setAll(clientesSeleccionados);
+        }
     }
 }
