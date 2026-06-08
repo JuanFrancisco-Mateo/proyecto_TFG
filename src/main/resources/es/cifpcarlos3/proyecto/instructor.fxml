@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -38,7 +37,7 @@
         <Line endX="331.0" endY="-3.814697265625E-6" layoutX="259.0" layoutY="272.0" startX="-122.33332824707031" />
         <ComboBox fx:id="cbEspecialidad" layoutX="245.0" layoutY="280.0" prefWidth="150.0" promptText="Especialidad" />
         <ListView fx:id="lvEspecialidades" layoutX="154.0" layoutY="308.0" prefHeight="128.0" prefWidth="241.0" />
-        <Button fx:id="btnDeleteInstructor" layoutX="468.0" layoutY="14.0" mnemonicParsing="false" onAction="#deleteInstructor" text="Eliminar instructor" />
+        <Button fx:id="btnDeleteInstructor" layoutX="472.0" layoutY="1.0" mnemonicParsing="false" onAction="#deleteInstructor" text="Eliminar instructor" />
         <Button fx:id="btnModifInstructor" layoutX="528.0" layoutY="419.0" mnemonicParsing="false" onAction="#modifInstructor" text="Modificar datos" />
         <Button fx:id="btnDeleteEspecialidad" layoutX="399.0" layoutY="346.0" mnemonicParsing="false" onAction="#deleteEspecialidad" text="Eliminar especialdad" />
         <Button fx:id="btnAddEspecialidad" layoutX="399.0" layoutY="314.0" mnemonicParsing="false" onAction="#addEspecialidad" prefHeight="25.0" prefWidth="124.0" text="Añadir especialidad" />
