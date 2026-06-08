@@ -51,7 +51,8 @@ public class InstructorControlador {
         db = new DatabaseConnection();
         instructorDAO = new InstructorDAOImpl(db);
 
-        cbCertificacion.getItems().setAll();
+        cbEspecialidad.getItems().setAll(Especialidad.values());
+        cbCertificacion.getItems().setAll(Certificacion.values());
         //En este no se bloquean los inputs, ya que el administrador si puede cambiarlos
     }
 
@@ -66,6 +67,7 @@ public class InstructorControlador {
         txtTlf.setText(instructor.getTelefono());
         txtFecha.setValue(instructor.getFechaNacimiento());
         txtTlfEMergencia.setText(instructor.getTelefonoUrgencia());
+        lvEspecialidades.getItems().setAll(instructor.getEspecialidades());
     }
 
     @FXML

@@ -19,4 +19,5 @@ public interface InstructorDAO {
     void addEspecialidad(int idInstructor, int idEspecialidad);
     void removeEspecialidad(int idInstructor, int idEspecialidad);
     int getIdEspecialidadPorNombre(String nombre);
+    List<Especialidad> getEspecialidades(int idInstructor);
 }

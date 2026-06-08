@@ -38,6 +38,7 @@ public class InstructorDAOImpl implements InstructorDAO {
         if (cert != null && !cert.isEmpty()) {
             instructor.setCertificacion(Certificacion.valueOf(cert));
         }
+        instructor.setEspecialidades(getEspecialidades(instructor.getIdInstructor()));
         return instructor;
     }
 
@@ -197,5 +198,26 @@ public class InstructorDAOImpl implements InstructorDAO {
         } catch (SQLException e) {
             System.err.println("Error obteniendo id especialidad: " + e.getMessage());
         }
-        return -1;    }
+        return -1;
+    }
+
+    @Override
+    public List<Especialidad> getEspecialidades(int idInstructor) {
+        List<Especialidad> especialidades = new ArrayList<>();
+        String consulta = "SELECT e.nombre FROM especialidades e " +
+                "JOIN instructor_especialidad ie ON e.idEspecialidad = ie.idEspecialidad " +
+                "WHERE ie.idInstructor = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(consulta)) {
+            stmt.setInt(1, idInstructor);
+            try (ResultSet rdo = stmt.executeQuery()) {
+                while (rdo.next()) {
+                    especialidades.add(Especialidad.valueOf(rdo.getString("nombre")));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener especialidades del instructor: " + e.getMessage());
+        }
+        return especialidades;
+    }
 }
