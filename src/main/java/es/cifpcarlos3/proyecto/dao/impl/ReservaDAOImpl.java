@@ -31,7 +31,7 @@ public class ReservaDAOImpl implements ReservaDAO {
         Inmersion inmersion= new Inmersion();
         inmersion.setIdInmersion(rdo.getInt("idInmersion"));
         inmersion.setTipo(rdo.getString("tipo"));
-        //inmersion.setLugar(rdo.getString("lugar"));
+        inmersion.setLugar(rdo.getString("lugar"));
         /*
         if ("BARCO".equals(tipo)) {
             InmersionBarco ib = new InmersionBarco();
@@ -56,7 +56,6 @@ public class ReservaDAOImpl implements ReservaDAO {
         reserva.setInmersion(inmersion);
         reserva.setFecha(rdo.getDate("fecha").toLocalDate());
         reserva.setHora(rdo.getTime("hora").toLocalTime());
-        reserva.setLugar(rdo.getString("lugar"));
 
         // Instructor (podría cargarse por separado)
         int idInstructor = rdo.getInt("idInstructor");
@@ -125,10 +124,11 @@ public class ReservaDAOImpl implements ReservaDAO {
             } else {
                 stmt.setNull(4, Types.INTEGER);
             }
-            if (reserva.getBarco() != null)
+            if (reserva.getBarco() != null) {
                 stmt.setInt(5, reserva.getBarco().getIdBarco());
-            else
+            }else {
                 stmt.setNull(5, Types.INTEGER);
+            }
             stmt.executeUpdate();
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {

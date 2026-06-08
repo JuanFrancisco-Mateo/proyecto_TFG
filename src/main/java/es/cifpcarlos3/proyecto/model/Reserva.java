@@ -20,7 +20,6 @@ public class Reserva {
     private Instructor instructor;
     private List<Cliente> clientes;
     private Barco barco;
-    private String lugar;
 
     @Override
     public String toString() {
