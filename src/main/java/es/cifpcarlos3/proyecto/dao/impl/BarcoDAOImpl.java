@@ -30,7 +30,7 @@ public class BarcoDAOImpl implements BarcoDAO {
             stmt.setDate(1, Date.valueOf(fecha));
             stmt.setTime(2, Time.valueOf(hora));
             try (ResultSet rdo = stmt.executeQuery()) {
-                if (rdo.next()) {
+                while (rdo.next()) {
                     Barco b = new Barco();
                     b.setIdBarco(rdo.getInt("idBarco"));
                     b.setNombre(rdo.getString("nombre"));
