@@ -36,8 +36,6 @@ public class ReservaControlador {
     @javafx.fxml.FXML
     private ComboBox<Instructor> cbInstructor;
     @javafx.fxml.FXML
-    private ComboBox<Especialidad> cbEspecialidad;
-    @javafx.fxml.FXML
     private ComboBox<String> cbTipo;
     @javafx.fxml.FXML
     private ComboBox<Barco> cbBarco;
@@ -53,8 +51,20 @@ public class ReservaControlador {
     private Button btnRemoveCliente;
     @javafx.fxml.FXML
     private Button btnModificar;
+    @javafx.fxml.FXML
+    private TextField txtBuscador;
+    @javafx.fxml.FXML
+    private ComboBox cbInmersion;
+    @javafx.fxml.FXML
+    private Button btnDeleteReserva;
+    @javafx.fxml.FXML
+    private TextField txtCertificacionMin;
+    @javafx.fxml.FXML
+    private Button btnGuardarCambios;
+
 
     Reserva reserva;
+    Inmersion inmersion;
     private ReservaDAO reservaDAO;
     private ClienteDAO clienteDAO;
     private InmersionesDAO inmersionesDAO;
@@ -64,12 +74,6 @@ public class ReservaControlador {
 
     Usuario usuario;
     private static final Logger log = LogManager.getLogger(ReservaControlador.class);
-    @javafx.fxml.FXML
-    private TextField txtBuscador;
-    @javafx.fxml.FXML
-    private ComboBox cbInmersion;
-    @javafx.fxml.FXML
-    private Button btnDeleteReserva;
 
 
     public void initialize(){
@@ -82,11 +86,20 @@ public class ReservaControlador {
         barcoDAO = new BarcoDAOImpl(db);
         instructorDAO = new InstructorDAOImpl(db);
 
-        //Solo se puede modificar la hora, fecha, instructor, barco, lugar y clientes
+        //Todos los campos aparecen bloqueados hasta que el usuario le da a modificar reserva
         cbTipo.setDisable(true);
         tfPlazas.setDisable(true);
         tfPrecio.setDisable(true);
-        cbEspecialidad.setDisable(true);
+        txtLugar.setDisable(true);
+        txtCertificacionMin.setDisable(true);
+        cbInmersion.setDisable(true);
+        cbHora.setDisable(true);
+        dpFecha.setDisable(true);
+        cbInstructor.setDisable(true);
+        cbBarco.setDisable(true);
+
+        //el boton de guardar cambios no aparece hasta clicar el de modificar datos
+        btnGuardarCambios.setVisible(false);
 
         // Listeners para actualizar instructores disponibles
         dpFecha.valueProperty().addListener((obs, old, newVal) -> actualizarInstructoresYBarco());
@@ -100,26 +113,34 @@ public class ReservaControlador {
         txtBuscador.textProperty().addListener((observable, oldValue, newValue) -> {
             buscadorClientes(newValue);
         });
-        txtLugar.setDisable(true);
+        //Al seleccionar barco cambia la capacidad maxima de la reserva
+        cbBarco.valueProperty().addListener((obs, oldVal, newVal) -> {
+            tfPlazas.setText(String.valueOf(calcularCapacidadReserva()));
+        });
+
 
     }
     public void setReserva(Reserva reserva) {
         this.reserva = reserva;
+        this.inmersion = reserva.getInmersion();
         dpFecha.setValue(reserva.getFecha());
         cbHora.setValue(reserva.getHora());
         cbInstructor.getItems().setAll(instructorDAO.listarInstructores());
         cbInstructor.setValue(reserva.getInstructor());
+        List<Cliente> clientes = reservaDAO.getClientes(reserva.getId());
+        reserva.setClientes(clientes);
         lvClientes.getItems().setAll(reservaDAO.getClientes(reserva.getId()));
         cbTipo.setValue(reserva.getInmersion().getTipo());
         tfPrecio.setText(String.valueOf(reserva.getInmersion().getPrecio()));
         tfPlazas.setText(String.valueOf(reserva.getInmersion().getPlazasMax()));
         if(reserva.getInmersion().getTipo().equalsIgnoreCase("Costa")){
-            txtLugar.setText(reserva.getLugar());
+            txtLugar.setText(reserva.getInmersion().getLugar());
         }else if(reserva.getInmersion().getTipo().equalsIgnoreCase("Barco")){
             cbBarco.getItems().setAll(barcoDAO.listarBarcos());
             cbBarco.setValue(reserva.getBarco());
         }
-        cbEspecialidad.getItems().setAll(Especialidad.values());
+        cbInmersion.setValue(inmersion);
+        txtCertificacionMin.setText(String.valueOf(reserva.getInmersion().getCertificacionMinima()));
 
     }
     private void actualizarInstructoresYBarco() {
@@ -168,12 +189,14 @@ public class ReservaControlador {
             mostrarError("Cliente duplicado", "El cliente ya está añadido a la reserva");
             return;
         }
+        int capacidad = calcularCapacidadReserva();
+        if(lvClientes.getItems().size()>=capacidad){
+            mostrarError("Plazas completas", "No quedan plazas disponibles para esta reserva");
+            return;
+        }
         //Añadimos el cliente a la reserva
         reserva.getClientes().add(cliente);
         lvClientes.getItems().setAll(reserva.getClientes());
-        // Limpiar selección
-        cbClientes.getSelectionModel().clearSelection();
-        cbClientes.getEditor().clear();
 
     }
     private boolean tieneCertificacionSuficiente(Cliente cliente, Certificacion certMin) {
@@ -232,6 +255,11 @@ public class ReservaControlador {
 
     @javafx.fxml.FXML
     public void modifReserva(ActionEvent actionEvent) {
+        int capacidad = calcularCapacidadReserva();
+        if (lvClientes.getItems().size() > capacidad) {
+            mostrarError("Capacidad insuficiente", "El barco seleccionado no tiene plazas suficientes para los clientes actuales");
+            return;
+        }
         if (reserva == null) return;
 
         reserva.setFecha(dpFecha.getValue());
@@ -239,9 +267,17 @@ public class ReservaControlador {
         reserva.setInstructor(cbInstructor.getValue());
         if(reserva.getInmersion().getTipo().equalsIgnoreCase("Barco")){
             reserva.setBarco(cbBarco.getValue());
+
         }
 
         reservaDAO.modifReserva(reserva);
+        //volvemos a deshabilitar los campos y cambiar los botones visibles
+        btnGuardarCambios.setVisible(false);
+        btnModificar.setVisible(true);
+        cbInstructor.setDisable(true);
+        dpFecha.setDisable(true);
+        cbHora.setDisable(true);
+        cbBarco.setDisable(true);
 
     }
 
@@ -275,5 +311,41 @@ public class ReservaControlador {
             ok.setContentText("No se pudo eliminar la reserva");
             ok.showAndWait();
         }
+    }
+
+    @javafx.fxml.FXML
+    public void cambioEditar(ActionEvent actionEvent) {
+        //desaparece el boton de editar y aparece el de guardar cambios
+        btnModificar.setVisible(false);
+        btnGuardarCambios.setVisible(true);
+        //Se habilitan los campos que pueden ser modificados
+        if(inmersion.getTipo().equalsIgnoreCase("Barco")){
+            cbBarco.setDisable(false);
+        }
+        cbInstructor.setDisable(false);
+        dpFecha.setDisable(false);
+        cbHora.setDisable(false);
+    }
+    //metodo para gestionar la capacidad maxima de la reserva
+    private int calcularCapacidadReserva(){
+        int capacidad=0;
+        if(reserva.getInmersion()==null){
+            capacidad=0;
+        }
+        if(cbTipo.getValue().equalsIgnoreCase("Barco")){
+            Barco barco=cbBarco.getValue();
+            if(barco == null || barco.getIdBarco()==0){
+                capacidad= reserva.getInmersion().getPlazasMax();
+            }else{
+                if(barco.getCapacidad()<reserva.getInmersion().getPlazasMax()) {
+                    capacidad = barco.getCapacidad();
+                }
+            }
+        }else if(cbTipo.getValue().equalsIgnoreCase("Costa")){
+            capacidad = reserva.getInmersion().getPlazasMax();
+        }else{
+            capacidad=0;
+        }
+        return capacidad;
     }
 }

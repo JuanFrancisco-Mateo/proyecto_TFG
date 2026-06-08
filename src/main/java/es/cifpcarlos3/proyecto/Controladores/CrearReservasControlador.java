@@ -43,8 +43,6 @@ public class CrearReservasControlador {
     @FXML
     private TextField tfPrecio;
     @FXML
-    private ComboBox<Especialidad> cbEspecialidad;
-    @FXML
     private ComboBox<Cliente> cbClientes;
     @FXML
     private Button btnCrearCliente;
@@ -56,6 +54,8 @@ public class CrearReservasControlador {
     private ComboBox<Inmersion> cbInmersion;
     @FXML
     private TextField txtBuscador;
+    @FXML
+    private TextField txtCertificacionMin;
 
     private ReservaDAO reservaDAO;
     private InmersionesDAO inmersionesDAO;
@@ -84,10 +84,10 @@ public class CrearReservasControlador {
         //Estos campos son automaticos de la base de datos
         tfPlazas.setDisable(true);
         tfPrecio.setDisable(true);
+        txtCertificacionMin.setDisable(true);
 
         // Cargar tipos de inmersión
         cbTipo.getItems().addAll("BARCO", "COSTA");
-        cbEspecialidad.getItems().setAll(Especialidad.values());
 
         // Cargar horas disponibles (de 8:00 a 18:00 en intervalos de 1 hora)
         for (int h = 8; h <= 18; h++) {
@@ -115,7 +115,13 @@ public class CrearReservasControlador {
         //Cuando el usuario selecciona una inmersion, ponemos solo las de ese tipo usando un listener
         cbInmersion.valueProperty().addListener((obs, old, val) -> onInmersionChanged(val));
 
-    }
+        //Al seleccionar barco cambia la capacidad maxima de la reserva
+        cbBarco.valueProperty().addListener((obs, oldVal, newVal) -> {
+            tfPlazas.setText(String.valueOf(calcularCapacidadReserva()));
+        });
+
+
+        }
     private void onInmersionChanged(Inmersion inmersion){
         inmersionSeleccionada = inmersion;
             //Si no hay nada seleccionado salimos del metodo
@@ -123,11 +129,13 @@ public class CrearReservasControlador {
                 tfPrecio.clear();
                 tfPlazas.clear();
                 txtLugar.clear();
+                txtCertificacionMin.clear();
                 return;
             }
 
             tfPrecio.setText(String.format("%.2f", inmersion.getPrecio()));
-            tfPlazas.setText(String.valueOf(inmersion.getPlazasMax()));
+            tfPlazas.setText(String.valueOf(calcularCapacidadReserva()));
+            txtCertificacionMin.setText(String.valueOf(inmersion.getCertificacionMinima()));
             if(inmersion.getTipo().equalsIgnoreCase("Costa")){
                 txtLugar.setText(inmersion.getLugar());
             }
@@ -150,10 +158,8 @@ public class CrearReservasControlador {
         // Mostrar/ocultar barco según tipo
         if ("BARCO".equals(tipo)) {
             cbBarco.setDisable(false);
-            txtLugar.setDisable(true);
         } else {
             cbBarco.setDisable(true);
-            txtLugar.setDisable(false);
             cbBarco.getSelectionModel().clearSelection();
         }
 /*
@@ -183,24 +189,13 @@ public class CrearReservasControlador {
 
             // Instructores disponibles
             List<Instructor> disponibles = instructorDAO.buscarDisponibles(fecha, hora);
-            if(disponibles.isEmpty()){
-                Instructor noExiste = new Instructor();
-                noExiste.setNombre("No hay instructores disponibles");
-                noExiste.setApellidos(" para esa fecha.");
-            }else {
-                cbInstructor.getItems().setAll(disponibles);
-            }
+            cbInstructor.getItems().setAll(disponibles);
+
 
             // Barco disponible (solo si es tipo BARCO)
             if ("BARCO".equals(cbTipo.getValue())) {
                 List<Barco> barcos = barcoDAO.devolverBarcoDisponible(fecha, hora);
-                if (barcos.isEmpty()) {
-                    cbBarco.getItems().clear();
-                    cbBarco.getItems().setAll(new Barco(0, "No hay barcos disponibles", 0));
-                } else {
-                    cbBarco.getItems().clear();
-                    cbBarco.getItems().setAll(barcos);
-                }
+                cbBarco.getItems().setAll(barcos);
             }
         }
     }
@@ -229,7 +224,12 @@ public class CrearReservasControlador {
                 mostrarError("Cliente duplicado", "El cliente ya está añadido a la reserva");
                 return;
             }
-
+            //comprobar que hay espacio en la reserva
+            int capacidad = calcularCapacidadReserva();
+            if(clientesSeleccionados.size() >= capacidad){
+                mostrarError("Plazas completas", "No quedan plazas disponibles para esta reserva");
+                return;
+            }
             clientesSeleccionados.add(cliente);
             lvClientes.getItems().setAll(clientesSeleccionados);
         }
@@ -280,8 +280,8 @@ public class CrearReservasControlador {
             mostrarError("Sin clientes", "Debe añadir al menos un cliente a la reserva");
             return;
         }
-
-        if (clientesSeleccionados.size() > inmersionSeleccionada.getPlazasMax()) {
+        int capacidad = calcularCapacidadReserva();
+        if (clientesSeleccionados.size() > capacidad) {
             mostrarError("Demasiados clientes",
                     "Máximo " + inmersionSeleccionada.getPlazasMax() + " clientes por reserva");
             return;
@@ -293,6 +293,14 @@ public class CrearReservasControlador {
         reserva.setFecha(fecha);
         reserva.setHora(hora);
         reserva.setInstructor(instructor);
+        if ("BARCO".equals(cbTipo.getValue())) {
+            Barco barco = cbBarco.getValue();
+            if (barco == null || barco.getIdBarco() == 0) {
+                mostrarError("Barco requerido", "Debe seleccionar un barco disponible");
+                return;
+            }
+            reserva.setBarco(barco);
+        }
 
         int idReserva = reservaDAO.crearReserva(reserva);
         if (idReserva > 0) {
@@ -363,5 +371,26 @@ public class CrearReservasControlador {
             clientesSeleccionados.remove(cliente);
             lvClientes.getItems().setAll(clientesSeleccionados);
         }
+    }
+
+    //metodo para gestionar la capacidad maxima de la reserva
+    private int calcularCapacidadReserva() {
+
+        if (inmersionSeleccionada == null) {
+            return 0;
+        }
+        if ("BARCO".equalsIgnoreCase(cbTipo.getValue())) {
+            Barco barco = cbBarco.getValue();
+            if (barco == null || barco.getIdBarco() == 0) {
+                return inmersionSeleccionada.getPlazasMax();
+            } else {
+                if (barco.getCapacidad() < inmersionSeleccionada.getPlazasMax()) {
+                     return barco.getCapacidad();
+                }else{
+                    return inmersionSeleccionada.getPlazasMax();
+                }
+            }
+        }
+        return inmersionSeleccionada.getPlazasMax();
     }
 }
