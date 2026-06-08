@@ -1,5 +1,5 @@
 .root{
-    -fx-background-color:#00D0FF;
+    -fx-background-color:#92d8e8;
 }
 
 #menuSuperior {
@@ -23,7 +23,7 @@
     -fx-border-style: solid;
 }
 #menuLateral Label {
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-text-fill: #0f172a;
     -fx-padding: 10 15;
     -fx-background-radius: 8;
@@ -43,9 +43,34 @@
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-text-fill: #0f172a;
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-font-weight: 600;
 }
 .calendar-view{
     -fx-background-color: green;
+}
+.button{
+    -fx-background-color: linear-gradient(#38bdf8,#0ea5e9);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-width: 0.5;
+    -fx-border-color: black;
+    -fx-border-radius: 8;
+}
+.table-view{
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #cbd5e1;
+}
+.table-view .column-header{
+    -fx-background-color: #bae6fd;
+    -fx-background-radius: 10 10 0 0;
+}
+.list-view{
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #cbd5e1;
 }
