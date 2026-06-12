@@ -96,7 +96,6 @@ CREATE TABLE IF NOT EXISTS reservas (
     hora TIME NOT NULL,
     idInstructor INT,
     idBarco INT,
-    lugar VARCHAR(200),
     UNIQUE (idInmersion, fecha, hora, idInstructor),
     FOREIGN KEY (idInmersion) REFERENCES inmersion(idInmersion) ON DELETE CASCADE,
     FOREIGN KEY (idInstructor) REFERENCES instructores(idInstructor) ON DELETE SET NULL,
@@ -137,10 +136,10 @@ CREATE TABLE IF NOT EXISTS instructor_especialidad (
 -- Especialidades
 INSERT IGNORE INTO especialidades (nombre) VALUES ('PROFUNDO'), ('APNEA'), ('CORRIENTES'), ('PECIOS'), ('CUEVAS');
 
--- Usuarios (contraseñas en Base64: "admin123" -> YWRtaW4xMjM=, "recepcion" -> cmVjZXBjaW9u)
+-- Usuarios (contraseña de admin es admin y la de user es user)
 INSERT IGNORE INTO usuario (nombre, apellidos, email, dni, fechaNacimiento, telefono, username, passwordHash, rol) VALUES
-('Administrador Principal','', 'admin@centrobuceo.com', '16923451F', '1990-03-20', '600111222', 'admin', 'YWRtaW4xMjM=', 'ADMINISTRADOR'),
-('María', 'López', 'maria@centrobuceo.com', '98978956F', '1980-03-20','600333444', 'maria', 'bWFyaWExMjM=', 'EMPLEADO');
+('Admin','admin', 'admin@centrobuceo.com', '16923451F', '1990-03-20', '600111222', 'admin', '$2a$10$mgjp6C.udSFkyAEdDg.x8O5YT4qlWYIuw6W5yqor0NPk0yJvhP/tG', 'ADMINISTRADOR'),
+('María', 'López', 'maria@centrobuceo.com', '98978956F', '1980-03-20','600333444', 'user', '$2a$10$0pSgDcHTRCFq6HM2HS17U.QOqS/sNzFlzrhRPw0l7ONwjHwKR0kpS', 'EMPLEADO');
 
 -- Clientes
 INSERT IGNORE INTO clientes (nombre, apellidos, dni, fechaNacimiento, telefono, email, telefonoUrgencia, certificacion, numeroSeguro, seguroHasta, fechaExp) VALUES
