@@ -117,7 +117,10 @@ public class ReservaControlador {
         cbBarco.valueProperty().addListener((obs, oldVal, newVal) -> {
             tfPlazas.setText(String.valueOf(calcularCapacidadReserva()));
         });
-
+        // Cargar horas disponibles (de 8:00 a 18:00 en intervalos de 1 hora)
+        for (int h = 8; h <= 18; h++) {
+            cbHora.getItems().add(LocalTime.of(h, 0));
+        }
 
     }
     public void setReserva(Reserva reserva) {
@@ -195,6 +198,7 @@ public class ReservaControlador {
             return;
         }
         //Añadimos el cliente a la reserva
+        reservaDAO.addCliente(reserva.getId(), cliente.getIdCliente());
         reserva.getClientes().add(cliente);
         lvClientes.getItems().setAll(reserva.getClientes());
 
@@ -232,6 +236,7 @@ public class ReservaControlador {
         }
 
         reservaDAO.removeCliente(reserva.getId(), cliente.getIdCliente());
+        reserva.getClientes().remove(cliente);
         lvClientes.getItems().remove(cliente);
     }
     public void buscadorClientes(String texto) {
